@@ -1,0 +1,121 @@
+<UserControl
+    x:Class="Com.Example.MusicStaffViewer.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer MaxHeight="520" HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel MinWidth="320" MaxWidth="400" Spacing="16">
+            <ComboBox x:Name="DisplayCombo" x:Uid="DisplayPreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{x:Bind DisplayModeName}">
+                <ComboBoxItem x:Uid="DisplaySystem" />
+                <ComboBoxItem x:Uid="DisplayLight" />
+                <ComboBoxItem x:Uid="DisplayDark" />
+            </ComboBox>
+
+            <ComboBox x:Name="AccentCombo" x:Uid="AccentPreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{x:Bind AccentThemeName}">
+                <ComboBoxItem x:Uid="ThemeYellow" />
+                <ComboBoxItem x:Uid="ThemeBlue" />
+                <ComboBoxItem x:Uid="ThemeGreen" />
+                <ComboBoxItem x:Uid="ThemePurple" />
+                <ComboBoxItem x:Uid="ThemeGray" />
+            </ComboBox>
+
+            <ComboBox x:Name="SheetCombo" x:Uid="SheetPreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{x:Bind SheetStyleName}">
+                <ComboBoxItem x:Uid="SheetFollow" />
+                <ComboBoxItem x:Uid="SheetPaper" />
+                <ComboBoxItem x:Uid="SheetDark" />
+            </ComboBox>
+
+            <ComboBox x:Name="PdfPageCombo" x:Uid="PdfPagePreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{x:Bind PdfPageName}">
+                <ComboBoxItem x:Uid="PdfPageA4" />
+                <ComboBoxItem x:Uid="PdfPageA3" />
+                <ComboBoxItem x:Uid="PdfPageLetter" />
+            </ComboBox>
+
+            <ComboBox x:Name="PdfQualityCombo" x:Uid="PdfQualityPreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.AutomationId="PdfQualityCombo"
+                      AutomationProperties.Name="{x:Bind PdfQualityName}">
+                <ComboBoxItem x:Uid="PdfQualityStandard" />
+                <ComboBoxItem x:Uid="PdfQualityHigh" />
+                <ComboBoxItem x:Uid="PdfQualityMaximum" />
+            </ComboBox>
+
+            <TextBlock x:Uid="PdfQualityHint" TextWrapping="Wrap"
+                       Style="{StaticResource CaptionTextBlockStyle}" />
+
+            <ComboBox x:Name="InitialZoomCombo" x:Uid="InitialZoomPreference" HorizontalAlignment="Stretch"
+                      SelectionChanged="OnInitialZoomChanged"
+                      AutomationProperties.AutomationId="InitialZoomCombo"
+                      AutomationProperties.Name="{x:Bind InitialZoomName}">
+                <ComboBoxItem x:Uid="InitialZoomFitWidth"
+                              AutomationProperties.AutomationId="FitWidthChoice" />
+                <ComboBoxItem x:Uid="InitialZoomCustom"
+                              AutomationProperties.AutomationId="CustomZoomChoice" />
+            </ComboBox>
+
+            <StackPanel x:Name="CustomZoomPanel" Spacing="4">
+                <Grid>
+                    <TextBlock x:Uid="DefaultZoomLabel" />
+                    <TextBlock x:Name="ZoomValue" HorizontalAlignment="Right" />
+                </Grid>
+                <Slider x:Name="ZoomSlider" Minimum="0.2" Maximum="4" StepFrequency="0.05"
+                        ValueChanged="OnDefaultZoomChanged"
+                        AutomationProperties.Name="{x:Bind DefaultZoomName}" />
+            </StackPanel>
+
+            <ComboBox x:Name="MeasureCombo" x:Uid="DefaultMeasuresPreference"
+                      HorizontalAlignment="Stretch" ItemsSource="{x:Bind MeasureCounts}"
+                      AutomationProperties.AutomationId="DefaultMeasuresCombo"
+                      AutomationProperties.Name="{x:Bind DefaultMeasuresName}" />
+
+            <ComboBox x:Name="NoteSpacingCombo" x:Uid="NoteSpacingPreference"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.AutomationId="NoteSpacingCombo"
+                      AutomationProperties.Name="{x:Bind NoteSpacingName}">
+                <ComboBoxItem x:Uid="NoteSpacingCompact" />
+                <ComboBoxItem x:Uid="NoteSpacingNormal" />
+                <ComboBoxItem x:Uid="NoteSpacingLoose" />
+            </ComboBox>
+
+            <TextBlock x:Uid="NoteSpacingHint" TextWrapping="Wrap"
+                       Style="{StaticResource CaptionTextBlockStyle}" />
+
+            <ComboBox x:Name="ScoreQualityCombo" x:Uid="ScoreQualityPreference"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.AutomationId="ScoreQualityCombo"
+                      AutomationProperties.Name="{x:Bind ScoreQualityName}">
+                <ComboBoxItem x:Uid="ScoreQualityStandard" />
+                <ComboBoxItem x:Uid="ScoreQualityHigh" />
+                <ComboBoxItem x:Uid="ScoreQualityMaximum" />
+            </ComboBox>
+
+            <TextBlock x:Uid="ScoreQualityHint" TextWrapping="Wrap"
+                       Style="{StaticResource CaptionTextBlockStyle}" />
+
+            <TextBlock x:Uid="SheetStyleHint" TextWrapping="Wrap"
+                       Style="{StaticResource CaptionTextBlockStyle}" />
+            <Rectangle Height="1" Fill="{ThemeResource AppBorderBrush}" />
+
+            <Button x:Name="ClearRecentButton" x:Uid="ClearRecentButton" HorizontalAlignment="Stretch">
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel Spacing="12" MaxWidth="320">
+                            <TextBlock x:Uid="ClearRecentTitleText" TextWrapping="Wrap"
+                                       Style="{StaticResource SubtitleTextBlockStyle}" />
+                            <TextBlock x:Uid="ClearRecentMessageText" TextWrapping="Wrap" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button x:Uid="ClearRecentConfirmButton" Click="OnConfirmClearRecent"
+                                        Style="{StaticResource AccentButtonStyle}" />
+                                <Button x:Uid="CancelButton" Click="OnCancelClearRecent" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <InfoBar x:Name="SettingsError" IsOpen="False" Severity="Error" IsClosable="True" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

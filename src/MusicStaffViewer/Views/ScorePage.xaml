@@ -1,0 +1,242 @@
+<UserControl
+    x:Class="Com.Example.MusicStaffViewer.Views.ScorePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Com.Example.MusicStaffViewer.ViewModels"
+    KeyboardAcceleratorPlacementMode="Hidden"
+    Loaded="OnLoaded" Unloaded="OnUnloaded">
+    <UserControl.KeyboardAccelerators>
+        <KeyboardAccelerator Key="O" Modifiers="Control" Invoked="OnOpenShortcut" />
+        <KeyboardAccelerator Key="Add" Modifiers="Control" Invoked="OnZoomInShortcut" />
+        <KeyboardAccelerator Key="Subtract" Modifiers="Control" Invoked="OnZoomOutShortcut" />
+        <KeyboardAccelerator Key="Number0" Modifiers="Control" Invoked="OnResetZoomShortcut" />
+        <KeyboardAccelerator Key="F5" Invoked="OnReloadShortcut" />
+    </UserControl.KeyboardAccelerators>
+    <Grid x:Name="RootGrid" ColumnSpacing="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="280" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="Sidebar" Grid.Column="0" Padding="12" RowSpacing="8"
+              Background="{ThemeResource AppSidebarBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="SidebarHeader" Grid.Row="0" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="SidebarTitle" x:Uid="FavoriteHeader" VerticalAlignment="Center"
+                           Style="{StaticResource SubtitleTextBlockStyle}" />
+                <Button x:Name="SidebarToggleButton" Grid.Column="1" Width="32" Height="32" Padding="0"
+                        HorizontalAlignment="Right" Click="OnToggleSidebarClicked">
+                    <FontIcon x:Name="SidebarToggleIcon" Glyph="&#xE76B;" FontSize="13" />
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1">
+                <ListView x:Name="FavoriteList" ItemsSource="{x:Bind ViewModel.FavoriteScores, Mode=OneWay}"
+                          SelectionChanged="OnFavoriteSelected" SelectionMode="Single">
+                    <ListView.Resources>
+                        <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="4" ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="{ThemeResource AppAccentBrush}" CornerRadius="2"
+                                        Visibility="{Binding IsCurrent, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <StackPanel Grid.Column="1" Spacing="4"
+                                            AutomationProperties.Name="{Binding Title}"
+                                            ToolTipService.ToolTip="{Binding Path}"
+                                            RightTapped="OnFavoriteRightTapped">
+                                    <TextBlock Text="{Binding Title}" TextWrapping="WrapWholeWords" MaxLines="2" />
+                                    <TextBlock Text="{Binding Composer}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock x:Name="FavoriteEmptyHint" x:Uid="NoFavoriteText" Margin="8"
+                           HorizontalAlignment="Center" VerticalAlignment="Top" TextAlignment="Center"
+                           TextWrapping="Wrap" Foreground="{ThemeResource AppSecondaryBrush}"
+                           Style="{StaticResource CaptionTextBlockStyle}" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1" RowSpacing="0" Background="{ThemeResource AppBackgroundBrush}"
+              AllowDrop="True" DragOver="OnDragOver" DragLeave="OnDragLeave" Drop="OnDrop">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="ToolbarPanel" Grid.Row="0" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <CommandBar DefaultLabelPosition="Right">
+                    <AppBarElementContainer VerticalAlignment="Center">
+                        <Button x:Name="FavoriteToggle" Width="40" Height="40" Padding="0"
+                                VerticalAlignment="Center"
+                                Background="Transparent" BorderThickness="0"
+                                Click="OnFavoriteToggleClicked"
+                                IsEnabled="{x:Bind ViewModel.HasScore, Mode=OneWay}">
+                            <FontIcon x:Name="FavoriteToggleIcon" Glyph="&#xE734;" FontSize="14"
+                                      VerticalAlignment="Center"
+                                      Foreground="{StaticResource AppFavoriteBrush}" />
+                        </Button>
+                    </AppBarElementContainer>
+                    <AppBarButton x:Name="ZoomOutButton" x:Uid="ZoomOutButton" Icon="ZoomOut" Click="OnZoomOutClicked" />
+                    <AppBarButton x:Name="ZoomInButton" x:Uid="ZoomInButton" Icon="ZoomIn" Click="OnZoomInClicked" />
+                    <AppBarButton x:Name="FitButton" x:Uid="FitButton" Icon="FullScreen" Click="OnFitWidthClicked" />
+                    <AppBarButton x:Name="PartsButton" x:Uid="PartsButton" Icon="Filter">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <StackPanel MinWidth="240" Spacing="8">
+                                    <TextBlock x:Uid="PartsHeader"
+                                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                                    <ItemsControl ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:ScoreTrackViewModel">
+                                                <CheckBox Content="{x:Bind DisplayName}" Tag="{x:Bind Index}"
+                                                          IsChecked="{x:Bind IsSelected, Mode=OneWay}"
+                                                          Click="OnTrackClicked" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Button x:Uid="ShowAllPartsButton" HorizontalAlignment="Stretch"
+                                            Click="OnShowAllPartsClicked" />
+                                    <TextBlock x:Uid="PartsHint" TextWrapping="Wrap"
+                                               Style="{StaticResource CaptionTextBlockStyle}" />
+                                </StackPanel>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarButton x:Name="OutlineButton" x:Uid="OutlineButton" Icon="List">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <ListView x:Name="SectionList"
+                                          ItemsSource="{x:Bind ViewModel.Sections, Mode=OneWay}"
+                                          MinWidth="260" MaxHeight="420"
+                                          SelectionChanged="OnSectionSelected">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ScoreSectionViewModel">
+                                            <TextBlock Text="{x:Bind DisplayName}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                </CommandBar>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="0,0,12,0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.ZoomText, Mode=OneWay}" MinWidth="48"
+                               TextAlignment="Right" VerticalAlignment="Center"
+                               Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock x:Uid="MeasuresPerSystemLabel" VerticalAlignment="Center" />
+                    <ComboBox x:Name="MeasureCombo" MinWidth="72" ItemsSource="{x:Bind MeasureCounts}"
+                              SelectionChanged="OnMeasuresPerSystemChanged"
+                              AutomationProperties.AutomationId="CurrentMeasuresCombo" />
+                </StackPanel>
+            </Grid>
+            <StackPanel Grid.Row="1">
+                <InfoBar x:Name="ErrorBar" x:Uid="ErrorBar" Severity="Error" IsOpen="False"
+                         IsClosable="True" Closed="OnErrorBarClosed"
+                         AutomationProperties.LiveSetting="Assertive"
+                         Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" />
+                <InfoBar x:Name="ExportBar" Severity="Success" IsOpen="False" IsClosable="True">
+                    <InfoBar.ActionButton>
+                        <Button x:Name="ExportOpenButton" Click="OnExportOpenClicked" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
+                <ProgressBar x:Name="ExportProgressBar" Margin="0,4" Maximum="1"
+                             Value="{x:Bind ViewModel.ExportProgress, Mode=OneWay}"
+                             Visibility="{x:Bind ViewModel.IsExporting, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </StackPanel>
+            <Grid Grid.Row="2">
+                <ScrollViewer x:Name="ScoreScrollViewer" HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto" ZoomMode="Disabled"
+                              SizeChanged="OnScoreViewportSizeChanged" ViewChanged="OnScoreViewChanged">
+                    <StackPanel x:Name="ScoreContent" Margin="16"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid x:Name="ScoreHeader" Width="{x:Bind ViewModel.HeaderDisplayWidth, Mode=OneWay}"
+                              Height="{x:Bind ViewModel.HeaderDisplayHeight, Mode=OneWay}"
+                              Margin="{x:Bind ViewModel.HeaderDisplayMargin, Mode=OneWay}"
+                              HorizontalAlignment="Left"
+                              Visibility="{x:Bind ViewModel.HasHeader, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Border Background="{ThemeResource AppSurfaceBrush}" />
+                            <Image Source="{x:Bind ViewModel.HeaderImageSource, Mode=OneWay}" Stretch="Fill" />
+                            <ProgressRing IsActive="{x:Bind ViewModel.IsHeaderLoading, Mode=OneWay}"
+                                          Visibility="{x:Bind ViewModel.IsHeaderLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <ItemsRepeater x:Name="ScoreRepeater" ItemsSource="{x:Bind ViewModel.Partials, Mode=OneWay}"
+                                       Width="{x:Bind ViewModel.ContentWidth, Mode=OneWay}"
+                                       HorizontalAlignment="Center"
+                                       ElementPrepared="OnElementPrepared" ElementClearing="OnElementClearing"
+                                       PointerPressed="OnScorePointerPressed" PointerMoved="OnScorePointerMoved"
+                                       PointerReleased="OnScorePointerReleased" PointerCanceled="OnScorePointerCanceled"
+                                       PointerCaptureLost="OnScorePointerCaptureLost"
+                                       PointerWheelChanged="OnScorePointerWheelChanged">
+                            <ItemsRepeater.Layout><StackLayout Spacing="0" /></ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ScorePartialViewModel">
+                                    <Grid Width="{x:Bind DisplayWidth, Mode=OneWay}"
+                                          Height="{x:Bind DisplayHeight, Mode=OneWay}"
+                                          Margin="{x:Bind DisplayMargin, Mode=OneWay}">
+                                        <Border Background="{ThemeResource AppSurfaceBrush}" />
+                                        <Image Source="{x:Bind ImageSource, Mode=OneWay}" Stretch="Fill" />
+                                        <ProgressRing IsActive="{x:Bind IsLoading, Mode=OneWay}"
+                                                      Visibility="{x:Bind IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </StackPanel>
+                </ScrollViewer>
+                <StackPanel x:Name="EmptyState" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+                    <TextBlock x:Uid="EmptyTitle" HorizontalAlignment="Center" TextAlignment="Center"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <Button x:Name="EmptyOpenButton" x:Uid="EmptyOpenButton" Click="OnOpenClicked" HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="EmptyHint" MaxWidth="420" TextWrapping="Wrap" TextAlignment="Center"
+                               Style="{StaticResource CaptionTextBlockStyle}" />
+                </StackPanel>
+                <StackPanel x:Name="LoadingState" Visibility="Collapsed" HorizontalAlignment="Center"
+                            VerticalAlignment="Center" Spacing="12">
+                    <ProgressRing IsActive="True" HorizontalAlignment="Center" />
+                    <TextBlock Text="{x:Bind ViewModel.Status, Mode=OneWay}" HorizontalAlignment="Center" />
+                </StackPanel>
+                <Grid x:Name="DropOverlay" Visibility="Collapsed" IsHitTestVisible="False">
+                    <Border Background="{ThemeResource AppAccentBrush}" Opacity="0.08" />
+                    <Border Background="{ThemeResource AppSurfaceBrush}" CornerRadius="8" Padding="24"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            BorderBrush="{ThemeResource AppBorderBrush}" BorderThickness="1">
+                        <TextBlock x:Uid="DropHint" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    </Border>
+                </Grid>
+            </Grid>
+            <StackPanel x:Name="StatusPanel" Grid.Row="3" Orientation="Horizontal" Padding="12,8" Spacing="16">
+                <TextBlock Text="{x:Bind ViewModel.ScoreTitle, Mode=OneWay}" MaxWidth="400"
+                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <TextBlock Text="{x:Bind ViewModel.Composer, Mode=OneWay}" MaxWidth="240"
+                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                           Foreground="{ThemeResource AppSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.CurrentSystemText, Mode=OneWay}" VerticalAlignment="Center"
+                           Style="{StaticResource CaptionTextBlockStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.CurrentMeasureText, Mode=OneWay}" VerticalAlignment="Center"
+                           Style="{StaticResource CaptionTextBlockStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.Status, Mode=OneWay}" VerticalAlignment="Center"
+                           AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

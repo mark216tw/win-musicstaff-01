@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Com.Example.MusicStaffViewer.Core</RootNamespace>
+  </PropertyGroup>
+</Project>

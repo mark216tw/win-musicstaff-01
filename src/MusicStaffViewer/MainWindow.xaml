@@ -1,0 +1,38 @@
+<Window
+    x:Class="Com.Example.MusicStaffViewer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid x:Name="Root" Background="{ThemeResource AppBackgroundBrush}"
+          KeyboardAcceleratorPlacementMode="Hidden">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border x:Name="MenuBarBorder" Grid.Row="0" Background="{ThemeResource AppSurfaceBrush}"
+                BorderBrush="{ThemeResource AppBorderBrush}" BorderThickness="0,0,0,1">
+            <MenuBar>
+                <MenuBarItem x:Name="FileMenuButton" x:Uid="FileMenuButton">
+                    <MenuFlyoutItem x:Name="OpenMenuItem" x:Uid="OpenMusicXmlMenu"
+                                    KeyboardAcceleratorTextOverride="Ctrl+O" Click="OnOpenScore" />
+                    <MenuFlyoutSubItem x:Name="RecentMenu" x:Uid="RecentMenu" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem x:Name="ReloadMenuItem" x:Uid="ReloadMenu"
+                                    KeyboardAcceleratorTextOverride="F5" Click="OnReloadScore" />
+                    <MenuFlyoutItem x:Name="CloseScoreMenuItem" x:Uid="CloseScoreMenu" Click="OnCloseScore" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem x:Name="ExportPdfMenuItem" x:Uid="ExportPdfMenu" Click="OnExportPdf" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem x:Name="AboutMenuItem" x:Uid="AboutMenu" Click="OnAbout" />
+                </MenuBarItem>
+                <MenuBarItem x:Name="SettingsMenuButton" x:Uid="SettingsMenuButton">
+                    <MenuFlyoutItem x:Name="PreferencesMenuItem" x:Uid="PreferencesMenu"
+                                    KeyboardAcceleratorTextOverride="Ctrl+," Click="OnPreferences" />
+                    <MenuFlyoutItem x:Name="FullScreenMenuItem" x:Uid="FullScreenMenu"
+                                    KeyboardAcceleratorTextOverride="F11" Click="OnToggleFullScreen" />
+                </MenuBarItem>
+            </MenuBar>
+        </Border>
+        <ContentControl x:Name="PageHost" Grid.Row="1"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+    </Grid>
+</Window>

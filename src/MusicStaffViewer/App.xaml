@@ -1,0 +1,22 @@
+<Application
+    x:Class="Com.Example.MusicStaffViewer.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:Com.Example.MusicStaffViewer.Helpers">
+    <Application.Resources>
+        <ResourceDictionary>
+            <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FFF5F8FC" />
+            <SolidColorBrush x:Key="AppSidebarBrush" Color="#FFF0F5FC" />
+            <SolidColorBrush x:Key="AppSurfaceBrush" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="AppForegroundBrush" Color="#FF1B2A3A" />
+            <SolidColorBrush x:Key="AppSecondaryBrush" Color="#FF56687B" />
+            <SolidColorBrush x:Key="AppAccentBrush" Color="#FF2776C6" />
+            <SolidColorBrush x:Key="AppFavoriteBrush" Color="#FFFFC107" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#FFD7E0EA" />
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

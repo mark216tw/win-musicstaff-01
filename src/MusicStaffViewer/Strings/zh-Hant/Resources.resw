@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AppTitle" xml:space="preserve"><value>五線譜檢視器</value></data>
+  <data name="FileMenuButton.Title" xml:space="preserve"><value>檔案</value></data>
+  <data name="SettingsMenuButton.Title" xml:space="preserve"><value>設定</value></data>
+  <data name="OpenMusicXmlMenu.Text" xml:space="preserve"><value>開啟 MusicXML</value></data>
+  <data name="RecentMenu.Text" xml:space="preserve"><value>最近開啟</value></data>
+  <data name="NoRecentMenu" xml:space="preserve"><value>尚無最近開啟</value></data>
+  <data name="ReloadMenu.Text" xml:space="preserve"><value>重新載入</value></data>
+  <data name="CloseScoreMenu.Text" xml:space="preserve"><value>關閉樂譜</value></data>
+  <data name="ExportPdfMenu.Text" xml:space="preserve"><value>匯出 PDF</value></data>
+  <data name="AboutMenu.Text" xml:space="preserve"><value>關於</value></data>
+  <data name="PreferencesMenu.Text" xml:space="preserve"><value>偏好設定</value></data>
+  <data name="FullScreenMenu.Text" xml:space="preserve"><value>全螢幕</value></data>
+  <data name="RemoveFavoriteText" xml:space="preserve"><value>從最愛移除</value></data>
+  <data name="AddFavoriteTooltip" xml:space="preserve"><value>將目前樂譜加入最愛</value></data>
+  <data name="RemoveFavoriteTooltip" xml:space="preserve"><value>將目前樂譜移出最愛</value></data>
+  <data name="FavoriteSaveError" xml:space="preserve"><value>最愛清單儲存失敗： </value></data>
+  <data name="CloseDialog" xml:space="preserve"><value>關閉</value></data>
+  <data name="PreferencesDialogTitle" xml:space="preserve"><value>偏好設定</value></data>
+  <data name="ApplyDialog" xml:space="preserve"><value>套用</value></data>
+  <data name="CancelDialog" xml:space="preserve"><value>取消</value></data>
+  <data name="ExportPdfNoScore" xml:space="preserve"><value>請先開啟樂譜再匯出 PDF。</value></data>
+  <data name="ExportPdfProgress" xml:space="preserve"><value>正在匯出 PDF…（{0}/{1}）</value></data>
+  <data name="ExportPdfSuccess" xml:space="preserve"><value>已匯出 PDF：{0}</value></data>
+  <data name="ExportPdfError" xml:space="preserve"><value>匯出 PDF 失敗： </value></data>
+  <data name="ExportPdfOpen" xml:space="preserve"><value>開啟 PDF</value></data>
+  <data name="ExportPdfOpenName" xml:space="preserve"><value>以預設檢視器開啟剛匯出的 PDF</value></data>
+  <data name="ExportPdfOpenError" xml:space="preserve"><value>無法開啟 PDF： </value></data>
+  <data name="ExportPdfOpenMissing" xml:space="preserve"><value>檔案已不存在，可能已被移動或刪除。</value></data>
+  <data name="FavoriteHeader.Text" xml:space="preserve"><value>最愛樂譜</value></data>
+  <data name="NoFavoriteText.Text" xml:space="preserve"><value>尚無最愛樂譜。開啟樂譜後按星號即可加入最愛。</value></data>
+  <data name="SidebarToggleName" xml:space="preserve"><value>收合或展開最愛樂譜清單</value></data>
+  <data name="ZoomOutButton.Label" xml:space="preserve"><value>縮小</value></data>
+  <data name="ZoomInButton.Label" xml:space="preserve"><value>放大</value></data>
+  <data name="FitButton.Label" xml:space="preserve"><value>符合寬度</value></data>
+  <data name="OpenName" xml:space="preserve"><value>開啟 MusicXML</value></data>
+  <data name="ReloadName" xml:space="preserve"><value>重新載入樂譜</value></data>
+  <data name="ZoomOutName" xml:space="preserve"><value>縮小樂譜</value></data>
+  <data name="ZoomInName" xml:space="preserve"><value>放大樂譜</value></data>
+  <data name="FitName" xml:space="preserve"><value>符合視窗寬度</value></data>
+  <data name="MeasuresPerSystemLabel.Text" xml:space="preserve"><value>每行小節</value></data>
+  <data name="MeasuresPerSystemAutomationName" xml:space="preserve"><value>目前樂譜每行小節數</value></data>
+  <data name="MeasuresPerSystemHint" xml:space="preserve"><value>調整目前樂譜每行顯示的小節數</value></data>
+  <data name="ErrorBar.Title" xml:space="preserve"><value>無法顯示樂譜</value></data>
+  <data name="EmptyTitle.Text" xml:space="preserve"><value>開啟 MusicXML 以顯示五線譜</value></data>
+  <data name="EmptyOpenButton.Content" xml:space="preserve"><value>開啟 MusicXML</value></data>
+  <data name="EmptyHint.Text" xml:space="preserve"><value>或將 .musicxml、.xml、.mxl 檔案拖曳到此處，也可以按 Ctrl+O 開啟。</value></data>
+  <data name="DropHint.Text" xml:space="preserve"><value>放開以開啟樂譜</value></data>
+  <data name="LayingOut" xml:space="preserve"><value>正在排版樂譜…</value></data>
+  <data name="SystemCount" xml:space="preserve"><value>共 {0} 個系統</value></data>
+  <data name="SystemPosition" xml:space="preserve"><value>系統 {0}/{1}</value></data>
+  <data name="RenderedCount" xml:space="preserve"><value>已繪製 {0}/{1} 個系統</value></data>
+  <data name="OpenError" xml:space="preserve"><value>開啟失敗： </value></data>
+  <data name="UnsupportedFileError" xml:space="preserve"><value>不支援的檔案格式： </value></data>
+  <data name="RenderError" xml:space="preserve"><value>繪製失敗： </value></data>
+  <data name="DisplayPreference.Header" xml:space="preserve"><value>顯示模式</value></data>
+  <data name="DisplayModeAutomationName" xml:space="preserve"><value>顯示模式</value></data>
+  <data name="DisplaySystem.Content" xml:space="preserve"><value>跟隨系統</value></data>
+  <data name="DisplayLight.Content" xml:space="preserve"><value>淺色</value></data>
+  <data name="DisplayDark.Content" xml:space="preserve"><value>深色</value></data>
+  <data name="AccentPreference.Header" xml:space="preserve"><value>介面主題</value></data>
+  <data name="AccentThemeAutomationName" xml:space="preserve"><value>介面主題</value></data>
+  <data name="ThemeYellow.Content" xml:space="preserve"><value>黃色護眼</value></data>
+  <data name="ThemeBlue.Content" xml:space="preserve"><value>經典藍</value></data>
+  <data name="ThemeGreen.Content" xml:space="preserve"><value>森林綠</value></data>
+  <data name="ThemePurple.Content" xml:space="preserve"><value>暮色紫</value></data>
+  <data name="ThemeGray.Content" xml:space="preserve"><value>中性灰</value></data>
+  <data name="SheetPreference.Header" xml:space="preserve"><value>樂譜樣式</value></data>
+  <data name="SheetStyleAutomationName" xml:space="preserve"><value>樂譜樣式</value></data>
+  <data name="SheetFollow.Content" xml:space="preserve"><value>跟隨顯示模式</value></data>
+  <data name="SheetPaper.Content" xml:space="preserve"><value>白底黑譜</value></data>
+  <data name="SheetDark.Content" xml:space="preserve"><value>黑底白譜</value></data>
+  <data name="SheetStyleHint.Text" xml:space="preserve"><value>變更樂譜樣式會重新繪製目前的樂譜。</value></data>
+  <data name="PdfPagePreference.Header" xml:space="preserve"><value>PDF 紙張大小</value></data>
+  <data name="PdfPageAutomationName" xml:space="preserve"><value>PDF 紙張大小</value></data>
+  <data name="PdfPageA4.Content" xml:space="preserve"><value>A4</value></data>
+  <data name="PdfPageA3.Content" xml:space="preserve"><value>A3</value></data>
+  <data name="PdfPageLetter.Content" xml:space="preserve"><value>Letter</value></data>
+  <data name="DefaultZoomLabel.Text" xml:space="preserve"><value>預設縮放</value></data>
+  <data name="DefaultZoomAutomationName" xml:space="preserve"><value>預設縮放</value></data>
+  <data name="InitialZoomPreference.Header" xml:space="preserve"><value>新開樂譜顯示</value></data>
+  <data name="InitialZoomAutomationName" xml:space="preserve"><value>新開樂譜顯示方式</value></data>
+  <data name="InitialZoomFitWidth.Content" xml:space="preserve"><value>符合寬度</value></data>
+  <data name="InitialZoomCustom.Content" xml:space="preserve"><value>自訂縮放</value></data>
+  <data name="DefaultMeasuresPreference.Header" xml:space="preserve"><value>預設每行小節數</value></data>
+  <data name="DefaultMeasuresAutomationName" xml:space="preserve"><value>預設每行小節數</value></data>
+  <data name="NoteSpacingPreference.Header" xml:space="preserve"><value>音符間距</value></data>
+  <data name="NoteSpacingAutomationName" xml:space="preserve"><value>音符間距</value></data>
+  <data name="NoteSpacingCompact.Content" xml:space="preserve"><value>緊湊</value></data>
+  <data name="NoteSpacingNormal.Content" xml:space="preserve"><value>標準</value></data>
+  <data name="NoteSpacingLoose.Content" xml:space="preserve"><value>寬鬆</value></data>
+  <data name="NoteSpacingHint.Text" xml:space="preserve"><value>調整不同時值音符之間的相對間距；每行小節數仍會影響整體疏密。</value></data>
+  <data name="ScoreQualityPreference.Header" xml:space="preserve"><value>樂譜品質</value></data>
+  <data name="ScoreQualityAutomationName" xml:space="preserve"><value>樂譜品質</value></data>
+  <data name="ScoreQualityStandard.Content" xml:space="preserve"><value>標準</value></data>
+  <data name="ScoreQualityHigh.Content" xml:space="preserve"><value>高</value></data>
+  <data name="ScoreQualityMaximum.Content" xml:space="preserve"><value>最高</value></data>
+  <data name="ScoreQualityHint.Text" xml:space="preserve"><value>較高品質會提高繪製解析度，並增加記憶體用量與縮放時的繪製時間。</value></data>
+  <data name="PdfQualityPreference.Header" xml:space="preserve"><value>PDF 品質</value></data>
+  <data name="PdfQualityAutomationName" xml:space="preserve"><value>PDF 品質</value></data>
+  <data name="PdfQualityStandard.Content" xml:space="preserve"><value>標準（2×）</value></data>
+  <data name="PdfQualityHigh.Content" xml:space="preserve"><value>高（3×）</value></data>
+  <data name="PdfQualityMaximum.Content" xml:space="preserve"><value>最高（4×）</value></data>
+  <data name="PdfQualityHint.Text" xml:space="preserve"><value>提高 PDF 匯出解析度會增加檔案大小與匯出時間。</value></data>
+  <data name="ClearRecentButton.Content" xml:space="preserve"><value>清除最近開啟</value></data>
+  <data name="ClearRecentAutomationName" xml:space="preserve"><value>清除最近開啟紀錄</value></data>
+  <data name="ClearRecentTitleText.Text" xml:space="preserve"><value>清除最近開啟？</value></data>
+  <data name="ClearRecentMessageText.Text" xml:space="preserve"><value>這會移除最近檔案紀錄，不會刪除樂譜檔案。</value></data>
+  <data name="ClearRecentConfirmButton.Content" xml:space="preserve"><value>清除</value></data>
+  <data name="CancelButton.Content" xml:space="preserve"><value>取消</value></data>
+  <data name="SettingsSaveError" xml:space="preserve"><value>設定儲存失敗： </value></data>
+  <data name="AboutTitle.Text" xml:space="preserve"><value>關於五線譜檢視器</value></data>
+  <data name="AboutDescription.Text" xml:space="preserve"><value>以純 C# 與 AlphaTab 呈現 MusicXML 五線譜，並可將目前樂譜匯出為 PDF；所有檔案都在本機處理。</value></data>
+  <data name="AboutVersionTitle.Text" xml:space="preserve"><value>版本資訊</value></data>
+  <data name="AboutLicensesTitle.Text" xml:space="preserve"><value>第三方授權</value></data>
+  <data name="AboutLicenses.Text" xml:space="preserve"><value>AlphaTab：MPL-2.0；AlphaSkia：BSD-3-Clause；SkiaSharp：MIT；Bravura 字型：SIL Open Font License 1.1。詳見 THIRD-PARTY-NOTICES.md。</value></data>
+  <data name="AboutPrivacyTitle.Text" xml:space="preserve"><value>隱私</value></data>
+  <data name="AboutPrivacy.Text" xml:space="preserve"><value>樂譜、設定與日誌只儲存在本機，不會上傳或蒐集遙測資料。</value></data>
+  <data name="VersionFormat" xml:space="preserve"><value>版本：{0}</value></data>
+  <data name="FileVersionFormat" xml:space="preserve"><value>檔案版本：{0}</value></data>
+  <data name="PartsButton.Label" xml:space="preserve"><value>聲部</value></data>
+  <data name="PartsButtonName" xml:space="preserve"><value>顯示或隱藏聲部</value></data>
+  <data name="PartsHeader.Text" xml:space="preserve"><value>顯示聲部</value></data>
+  <data name="PartsHint.Text" xml:space="preserve"><value>至少保留一個聲部；變更後會重新排版並保留目前閱讀位置。</value></data>
+  <data name="ShowAllPartsButton.Content" xml:space="preserve"><value>全部顯示</value></data>
+  <data name="OutlineButton.Label" xml:space="preserve"><value>目錄</value></data>
+  <data name="OutlineButtonName" xml:space="preserve"><value>顯示樂譜目錄</value></data>
+  <data name="GoToMeasureDialogTitle" xml:space="preserve"><value>前往小節</value></data>
+  <data name="GoToMeasureLabel" xml:space="preserve"><value>小節編號</value></data>
+  <data name="GoToMeasureHint" xml:space="preserve"><value>請輸入 1–{0} 之間的小節編號。</value></data>
+  <data name="GoToMeasureButton" xml:space="preserve"><value>前往</value></data>
+  <data name="CurrentMeasureRange" xml:space="preserve"><value>第 {0}–{1} 小節</value></data>
+  <data name="CurrentMeasureApprox" xml:space="preserve"><value>約第 {0} 小節</value></data>
+  <data name="TrackDisplayName" xml:space="preserve"><value>{0}. {1}</value></data>
+  <data name="TrackFallbackName" xml:space="preserve"><value>聲部 {0}</value></data>
+  <data name="SectionDisplayName" xml:space="preserve"><value>第 {0} 小節　{1}</value></data>
+  <data name="SectionMeasureOnly" xml:space="preserve"><value>第 {0} 小節</value></data>
+  <data name="Relayouting" xml:space="preserve"><value>正在重排樂譜…</value></data>
+  <data name="RelayoutError" xml:space="preserve"><value>重新排版失敗： </value></data>
+</root>
