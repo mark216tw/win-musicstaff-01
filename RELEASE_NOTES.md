@@ -1,27 +1,33 @@
-# MusicStaffViewer 1.15.0
+# MusicStaffViewer 1.16.0
 
 用 Windows 桌面程式閱讀 MusicXML 五線譜。可開啟或拖放 `.musicxml`、`.xml`、`.mxl` 檔，並將目前樂譜匯出為 PDF。
 
 ## 下載
 
-- `MusicStaffViewer-1.15.0-win-x64.zip`：Intel／AMD x64 電腦。
-- `MusicStaffViewer-1.15.0-win-arm64.zip`：Windows on Arm（ARM64）裝置。
+- `MusicStaffViewer-1.16.0-win-x64.zip`：Intel／AMD x64 電腦。
+- `MusicStaffViewer-1.16.0-win-arm64.zip`：Windows on Arm（ARM64）裝置。
 
 解壓縮後直接執行 `MusicStaffViewer.exe`，本版本不提供安裝程式。此為非 Self-Contained 版本，請先安裝 [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)；Windows App SDK 已包含在壓縮檔中。
 
 ## 本次更新
 
-- 新增 ARM64 版本，與 x64 版功能相同。
-- 新增完整繁體中文文件，包含使用指南、系統架構、系統設計與建置發佈說明。
-- 專案改採 MIT License。
-- 升級 AlphaSkia 至 4.0.157，補齊 ARM64 原生程式庫。
-- 既有 x64 功能與 1.14.2 相同：樂譜檢視、縮放、聲部切換、目錄導覽、最愛清單、閱讀位置續讀與 PDF 匯出。
+- 修正主畫面與 PDF 的中文樂譜名稱上緣可能被截斷。
+- 偏好設定重新排序，並將名稱統一為「樂譜顯示比例」與「樂譜顯示品質」。
+- 移除獨立的樂譜樣式選項；樂譜會固定跟隨介面的顯示模式與系統深淺色變化。
+- 繼續提供 x64 與 ARM64 兩種版本。
 
 ## 系統需求
 
 - Windows 10 1809（build 17763）以上。
 - .NET 10 Desktop Runtime（x64 或 ARM64）。
 - 尚未在 Windows 10 1809 與 ARM64 實機完整驗證；開發與驗證環境為 Windows 11 x64。
+
+## 1.15.0 - 2026-11-18
+
+- 新增 ARM64 版本，與 x64 版功能相同。
+- 新增完整繁體中文文件，包含使用指南、系統架構、系統設計與建置發佈說明。
+- 專案改採 MIT License。
+- 升級 AlphaSkia 至 4.0.157，補齊 ARM64 原生程式庫。
 
 ## 1.14.2 - 2026-11-18
 

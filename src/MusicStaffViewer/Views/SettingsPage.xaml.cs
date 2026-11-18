@@ -21,7 +21,6 @@ public sealed partial class SettingsPage : UserControl
 
     public string DisplayModeName => _strings.GetString("DisplayModeAutomationName");
     public string AccentThemeName => _strings.GetString("AccentThemeAutomationName");
-    public string SheetStyleName => _strings.GetString("SheetStyleAutomationName");
     public string PdfPageName => _strings.GetString("PdfPageAutomationName");
     public string InitialZoomName => _strings.GetString("InitialZoomAutomationName");
     public string DefaultZoomName => _strings.GetString("DefaultZoomAutomationName");
@@ -49,7 +48,6 @@ public sealed partial class SettingsPage : UserControl
         _initializing = true;
         DisplayCombo.SelectedIndex = (int)_scores.Settings.DisplayMode;
         AccentCombo.SelectedIndex = (int)_scores.Settings.AccentTheme;
-        SheetCombo.SelectedIndex = (int)_scores.Settings.SheetStyle;
         PdfPageCombo.SelectedIndex = (int)_scores.Settings.PdfPageSize;
         InitialZoomCombo.SelectedIndex = (int)_scores.Settings.InitialZoomMode;
         MeasureCombo.SelectedItem = _scores.Settings.DefaultMeasuresPerSystem;
@@ -65,7 +63,7 @@ public sealed partial class SettingsPage : UserControl
     public async Task<bool> ApplyAsync()
     {
         if (DisplayCombo.SelectedIndex < 0 || AccentCombo.SelectedIndex < 0 ||
-            SheetCombo.SelectedIndex < 0 || PdfPageCombo.SelectedIndex < 0 ||
+            PdfPageCombo.SelectedIndex < 0 ||
             InitialZoomCombo.SelectedIndex < 0 || MeasureCombo.SelectedItem is not int measures ||
             NoteSpacingCombo.SelectedIndex < 0 || ScoreQualityCombo.SelectedIndex < 0 ||
             PdfQualityCombo.SelectedIndex < 0)
@@ -76,7 +74,6 @@ public sealed partial class SettingsPage : UserControl
         AppSettings settings = _scores.Settings;
         DisplayMode previousDisplayMode = settings.DisplayMode;
         AccentTheme previousAccentTheme = settings.AccentTheme;
-        SheetStyle previousSheetStyle = settings.SheetStyle;
         PdfPageSize previousPdfPageSize = settings.PdfPageSize;
         InitialZoomMode previousInitialZoomMode = settings.InitialZoomMode;
         double previousDefaultZoom = settings.DefaultZoom;
@@ -87,7 +84,6 @@ public sealed partial class SettingsPage : UserControl
 
         settings.DisplayMode = (DisplayMode)DisplayCombo.SelectedIndex;
         settings.AccentTheme = (AccentTheme)AccentCombo.SelectedIndex;
-        settings.SheetStyle = (SheetStyle)SheetCombo.SelectedIndex;
         settings.PdfPageSize = (PdfPageSize)PdfPageCombo.SelectedIndex;
         settings.InitialZoomMode = (InitialZoomMode)InitialZoomCombo.SelectedIndex;
         settings.DefaultZoom = ZoomSlider.Value;
@@ -100,7 +96,6 @@ public sealed partial class SettingsPage : UserControl
         {
             settings.DisplayMode = previousDisplayMode;
             settings.AccentTheme = previousAccentTheme;
-            settings.SheetStyle = previousSheetStyle;
             settings.PdfPageSize = previousPdfPageSize;
             settings.InitialZoomMode = previousInitialZoomMode;
             settings.DefaultZoom = previousDefaultZoom;
@@ -112,12 +107,10 @@ public sealed partial class SettingsPage : UserControl
         }
 
         bool displayChanged = settings.DisplayMode != previousDisplayMode;
-        bool sheetChanged = settings.SheetStyle != previousSheetStyle;
         bool noteSpacingChanged = settings.NoteSpacing != previousNoteSpacing;
         bool scoreQualityChanged = settings.ScoreQuality != previousScoreQuality;
         _theme.Apply(settings, App.MainWindow!.RootElement);
-        if (sheetChanged || noteSpacingChanged || scoreQualityChanged ||
-            (displayChanged && settings.SheetStyle == SheetStyle.FollowDisplay))
+        if (displayChanged || noteSpacingChanged || scoreQualityChanged)
         {
             await _scores.ReloadAsync();
         }

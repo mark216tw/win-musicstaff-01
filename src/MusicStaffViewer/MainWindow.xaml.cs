@@ -409,10 +409,7 @@ public sealed partial class MainWindow : Window
         {
             _theme.Apply(_scores.Settings, Root);
             _lastSystemDark = dark;
-            if (_scores.Settings.SheetStyle == SheetStyle.FollowDisplay)
-            {
-                await _scores.ReloadAsync();
-            }
+            await _scores.ReloadAsync();
         }
         catch (Exception exception)
         {

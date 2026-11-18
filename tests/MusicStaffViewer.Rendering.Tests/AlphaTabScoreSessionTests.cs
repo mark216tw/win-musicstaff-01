@@ -79,10 +79,44 @@ public sealed class AlphaTabScoreSessionTests
                 throw new InvalidDataException("Header PNG decode failed");
             int expectedHeight = (int)Math.Ceiling(layout.Header.Height * AlphaTabScoreSession.RasterScale);
             Assert.InRange(headerImage.Height, expectedHeight - 1, expectedHeight + 1);
+            AssertTopRowIsBackground(headerImage);
         }
         finally
         {
             File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public async Task ChineseTitleDoesNotTouchHeaderTopEdgeAsync()
+    {
+        string score = TwoPartScore.Replace("Test Sonata", "貝多芬-月光奏鳴曲-Moonlight Sonata",
+            StringComparison.Ordinal);
+        string path = await WriteTemporaryScoreAsync(score);
+        try
+        {
+            await using var session = new AlphaTabScoreSession(new ScoreFileReader());
+            await session.LoadAsync(path, darkPaper: false, measuresPerSystem: 6,
+                noteSpacing: NoteSpacing.Normal);
+
+            byte[] headerPng = (await session.RenderHeaderPartialAsync()).Png;
+            using AlphaSkiaImage headerImage = AlphaSkiaImage.Decode(headerPng) ??
+                throw new InvalidDataException("Header PNG decode failed");
+            AssertTopRowIsBackground(headerImage);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static void AssertTopRowIsBackground(AlphaSkiaImage image)
+    {
+        byte[] pixels = image.ReadPixels() ?? throw new InvalidDataException("Pixel readback failed");
+        byte[] backgroundPixel = pixels[..4];
+        for (int x = 0; x < image.Width; x++)
+        {
+            Assert.Equal(backgroundPixel, pixels.AsSpan(x * 4, 4).ToArray());
         }
     }
 

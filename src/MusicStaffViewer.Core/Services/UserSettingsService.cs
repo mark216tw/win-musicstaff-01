@@ -59,11 +59,6 @@ public sealed class UserSettingsService(string path)
                     settings.AccentTheme = AccentTheme.ClassicBlue;
                 }
 
-                if (!Enum.IsDefined(settings.SheetStyle))
-                {
-                    settings.SheetStyle = SheetStyle.FollowDisplay;
-                }
-
                 if (!Enum.IsDefined(settings.PdfPageSize))
                 {
                     settings.PdfPageSize = PdfPageSize.A4;

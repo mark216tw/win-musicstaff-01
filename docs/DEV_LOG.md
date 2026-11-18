@@ -4,6 +4,31 @@
 
 ---
 
+## 2026-11-18 - v1.16.0
+
+### 目標
+修正主畫面與 PDF 樂譜名稱邊緣被截斷，並整理偏好設定的順序、名稱與樂譜顯示模式。
+
+### 變更
+- `AlphaTabScoreSession`：頁首文字指定使用 `Microsoft JhengHei`，避免繁中文字型 fallback 的墨水範圍超出 AlphaTab 行框。
+- `SettingsPage`／`Resources.resw`：依指定順序重排設定，移除樂譜樣式，並改名為「樂譜顯示比例」與「樂譜顯示品質」。
+- `AppSettings`／`UserSettingsService`／`ScoreViewModel`：移除 `SheetStyle`，樂譜固定依 `DisplayMode` 決定深淺色；舊設定欄位可安全忽略。
+- `MainWindow`：系統顯示模式變化時同步重新繪製目前樂譜。
+- 渲染測試新增中文標題上緣邊界驗證；核心測試新增舊設定檔相容性驗證。
+- 更新使用指南、架構、設計、變更紀錄與版本至 1.16.0。
+
+### 問題與解法
+- 取消頁首下緣 17 像素裁切後問題未改善，確認該裁切與標題上緣無關 → 恢復下緣裁切，避免標題與譜面間距變大。
+- AlphaSkia 4.0.157 與 3.5.147 都會讓 AlphaTab 的預設繁中字型 fallback 超出第一行行框 → 保留 ARM64 所需的 4.0.157，改為明確指定 Windows 內建繁中字型。
+- 核心與渲染測試並行時同時編譯 `MusicStaffViewer.Core.dll`，造成輸出檔鎖定 → 完整驗證改為序列執行。
+- 舊 `settings.json` 可能仍含 `SheetStyle` → 利用 `System.Text.Json` 預設忽略未知欄位，並測試再次儲存後欄位會移除。
+
+### 待辦／已知限制
+- 尚未在 Windows 10 1809、ARM64 與不同 DPI 實機檢查中文頁首。
+- PDF 仍為點陣輸出。
+
+---
+
 ## 2026-11-18 - v1.15.0
 
 ### 目標

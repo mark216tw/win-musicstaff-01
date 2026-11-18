@@ -70,12 +70,6 @@
   <data name="ThemeGreen.Content" xml:space="preserve"><value>森林綠</value></data>
   <data name="ThemePurple.Content" xml:space="preserve"><value>暮色紫</value></data>
   <data name="ThemeGray.Content" xml:space="preserve"><value>中性灰</value></data>
-  <data name="SheetPreference.Header" xml:space="preserve"><value>樂譜樣式</value></data>
-  <data name="SheetStyleAutomationName" xml:space="preserve"><value>樂譜樣式</value></data>
-  <data name="SheetFollow.Content" xml:space="preserve"><value>跟隨顯示模式</value></data>
-  <data name="SheetPaper.Content" xml:space="preserve"><value>白底黑譜</value></data>
-  <data name="SheetDark.Content" xml:space="preserve"><value>黑底白譜</value></data>
-  <data name="SheetStyleHint.Text" xml:space="preserve"><value>變更樂譜樣式會重新繪製目前的樂譜。</value></data>
   <data name="PdfPagePreference.Header" xml:space="preserve"><value>PDF 紙張大小</value></data>
   <data name="PdfPageAutomationName" xml:space="preserve"><value>PDF 紙張大小</value></data>
   <data name="PdfPageA4.Content" xml:space="preserve"><value>A4</value></data>
@@ -83,8 +77,8 @@
   <data name="PdfPageLetter.Content" xml:space="preserve"><value>Letter</value></data>
   <data name="DefaultZoomLabel.Text" xml:space="preserve"><value>預設縮放</value></data>
   <data name="DefaultZoomAutomationName" xml:space="preserve"><value>預設縮放</value></data>
-  <data name="InitialZoomPreference.Header" xml:space="preserve"><value>新開樂譜顯示</value></data>
-  <data name="InitialZoomAutomationName" xml:space="preserve"><value>新開樂譜顯示方式</value></data>
+  <data name="InitialZoomPreference.Header" xml:space="preserve"><value>樂譜顯示比例</value></data>
+  <data name="InitialZoomAutomationName" xml:space="preserve"><value>樂譜顯示比例</value></data>
   <data name="InitialZoomFitWidth.Content" xml:space="preserve"><value>符合寬度</value></data>
   <data name="InitialZoomCustom.Content" xml:space="preserve"><value>自訂縮放</value></data>
   <data name="DefaultMeasuresPreference.Header" xml:space="preserve"><value>預設每行小節數</value></data>
@@ -95,8 +89,8 @@
   <data name="NoteSpacingNormal.Content" xml:space="preserve"><value>標準</value></data>
   <data name="NoteSpacingLoose.Content" xml:space="preserve"><value>寬鬆</value></data>
   <data name="NoteSpacingHint.Text" xml:space="preserve"><value>調整不同時值音符之間的相對間距；每行小節數仍會影響整體疏密。</value></data>
-  <data name="ScoreQualityPreference.Header" xml:space="preserve"><value>樂譜品質</value></data>
-  <data name="ScoreQualityAutomationName" xml:space="preserve"><value>樂譜品質</value></data>
+  <data name="ScoreQualityPreference.Header" xml:space="preserve"><value>樂譜顯示品質</value></data>
+  <data name="ScoreQualityAutomationName" xml:space="preserve"><value>樂譜顯示品質</value></data>
   <data name="ScoreQualityStandard.Content" xml:space="preserve"><value>標準</value></data>
   <data name="ScoreQualityHigh.Content" xml:space="preserve"><value>高</value></data>
   <data name="ScoreQualityMaximum.Content" xml:space="preserve"><value>最高</value></data>

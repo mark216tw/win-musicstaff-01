@@ -21,7 +21,6 @@ public sealed class UserSettingsServiceTests
             {
                 AccentTheme = AccentTheme.ForestGreen,
                 DisplayMode = DisplayMode.Dark,
-                SheetStyle = SheetStyle.Paper,
                 PdfPageSize = PdfPageSize.A3,
                 InitialZoomMode = InitialZoomMode.Custom,
                 DefaultZoom = 3.0,
@@ -38,7 +37,6 @@ public sealed class UserSettingsServiceTests
             AppSettings loaded = await service.LoadAsync();
             Assert.Equal(AccentTheme.ForestGreen, loaded.AccentTheme);
             Assert.Equal(DisplayMode.Dark, loaded.DisplayMode);
-            Assert.Equal(SheetStyle.Paper, loaded.SheetStyle);
             Assert.Equal(PdfPageSize.A3, loaded.PdfPageSize);
             Assert.Equal(InitialZoomMode.Custom, loaded.InitialZoomMode);
             Assert.Equal(3.0, loaded.DefaultZoom);
@@ -227,6 +225,33 @@ public sealed class UserSettingsServiceTests
             Assert.Equal(3, view.TopSystem);
             Assert.Equal(0, view.OffsetWithinSystem);
             Assert.Equal([0], view.VisibleTrackIndices);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task IgnoresAndRemovesLegacySheetStyleAsync()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), $"MusicStaffViewer-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+        string path = Path.Combine(directory, "settings.json");
+        try
+        {
+            await File.WriteAllTextAsync(path, """
+                {"DisplayMode":2,"SheetStyle":1,"PdfPageSize":1}
+                """);
+            var service = new UserSettingsService(path);
+
+            AppSettings loaded = await service.LoadAsync();
+            Assert.Equal(DisplayMode.Dark, loaded.DisplayMode);
+            Assert.Equal(PdfPageSize.A3, loaded.PdfPageSize);
+
+            await service.SaveAsync(loaded);
+            string saved = await File.ReadAllTextAsync(path);
+            Assert.DoesNotContain("SheetStyle", saved, StringComparison.Ordinal);
         }
         finally
         {

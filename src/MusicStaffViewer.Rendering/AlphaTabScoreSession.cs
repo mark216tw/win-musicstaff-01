@@ -255,6 +255,20 @@ public sealed class AlphaTabScoreSession(ScoreFileReader fileReader) : IAsyncDis
         settings.Display.SpacingRatio = ScoreDisplayOptions.GetSpacingRatio(noteSpacing);
         Color ink = darkPaper ? new Color(240, 240, 240, 255) : new Color(16, 16, 16, 255);
         Color staff = darkPaper ? new Color(174, 174, 174, 255) : new Color(80, 80, 80, 255);
+        foreach (NotationElement element in new[]
+        {
+            NotationElement.ScoreTitle,
+            NotationElement.ScoreSubTitle,
+            NotationElement.ScoreArtist,
+            NotationElement.ScoreAlbum,
+            NotationElement.ScoreWords,
+            NotationElement.ScoreMusic,
+            NotationElement.ScoreWordsAndMusic,
+            NotationElement.ScoreCopyright
+        })
+        {
+            settings.Display.Resources.ElementFonts.Get(element)!.Families = ["Microsoft JhengHei"];
+        }
         settings.Display.Resources.MainGlyphColor = ink;
         settings.Display.Resources.SecondaryGlyphColor = ink;
         settings.Display.Resources.ScoreInfoColor = ink;

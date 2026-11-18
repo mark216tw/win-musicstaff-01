@@ -21,29 +21,16 @@
                 <ComboBoxItem x:Uid="ThemeGray" />
             </ComboBox>
 
-            <ComboBox x:Name="SheetCombo" x:Uid="SheetPreference" HorizontalAlignment="Stretch"
-                      AutomationProperties.Name="{x:Bind SheetStyleName}">
-                <ComboBoxItem x:Uid="SheetFollow" />
-                <ComboBoxItem x:Uid="SheetPaper" />
-                <ComboBoxItem x:Uid="SheetDark" />
+            <ComboBox x:Name="ScoreQualityCombo" x:Uid="ScoreQualityPreference"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.AutomationId="ScoreQualityCombo"
+                      AutomationProperties.Name="{x:Bind ScoreQualityName}">
+                <ComboBoxItem x:Uid="ScoreQualityStandard" />
+                <ComboBoxItem x:Uid="ScoreQualityHigh" />
+                <ComboBoxItem x:Uid="ScoreQualityMaximum" />
             </ComboBox>
 
-            <ComboBox x:Name="PdfPageCombo" x:Uid="PdfPagePreference" HorizontalAlignment="Stretch"
-                      AutomationProperties.Name="{x:Bind PdfPageName}">
-                <ComboBoxItem x:Uid="PdfPageA4" />
-                <ComboBoxItem x:Uid="PdfPageA3" />
-                <ComboBoxItem x:Uid="PdfPageLetter" />
-            </ComboBox>
-
-            <ComboBox x:Name="PdfQualityCombo" x:Uid="PdfQualityPreference" HorizontalAlignment="Stretch"
-                      AutomationProperties.AutomationId="PdfQualityCombo"
-                      AutomationProperties.Name="{x:Bind PdfQualityName}">
-                <ComboBoxItem x:Uid="PdfQualityStandard" />
-                <ComboBoxItem x:Uid="PdfQualityHigh" />
-                <ComboBoxItem x:Uid="PdfQualityMaximum" />
-            </ComboBox>
-
-            <TextBlock x:Uid="PdfQualityHint" TextWrapping="Wrap"
+            <TextBlock x:Uid="ScoreQualityHint" TextWrapping="Wrap"
                        Style="{StaticResource CaptionTextBlockStyle}" />
 
             <ComboBox x:Name="InitialZoomCombo" x:Uid="InitialZoomPreference" HorizontalAlignment="Stretch"
@@ -66,11 +53,6 @@
                         AutomationProperties.Name="{x:Bind DefaultZoomName}" />
             </StackPanel>
 
-            <ComboBox x:Name="MeasureCombo" x:Uid="DefaultMeasuresPreference"
-                      HorizontalAlignment="Stretch" ItemsSource="{x:Bind MeasureCounts}"
-                      AutomationProperties.AutomationId="DefaultMeasuresCombo"
-                      AutomationProperties.Name="{x:Bind DefaultMeasuresName}" />
-
             <ComboBox x:Name="NoteSpacingCombo" x:Uid="NoteSpacingPreference"
                       HorizontalAlignment="Stretch"
                       AutomationProperties.AutomationId="NoteSpacingCombo"
@@ -83,19 +65,27 @@
             <TextBlock x:Uid="NoteSpacingHint" TextWrapping="Wrap"
                        Style="{StaticResource CaptionTextBlockStyle}" />
 
-            <ComboBox x:Name="ScoreQualityCombo" x:Uid="ScoreQualityPreference"
-                      HorizontalAlignment="Stretch"
-                      AutomationProperties.AutomationId="ScoreQualityCombo"
-                      AutomationProperties.Name="{x:Bind ScoreQualityName}">
-                <ComboBoxItem x:Uid="ScoreQualityStandard" />
-                <ComboBoxItem x:Uid="ScoreQualityHigh" />
-                <ComboBoxItem x:Uid="ScoreQualityMaximum" />
+            <ComboBox x:Name="MeasureCombo" x:Uid="DefaultMeasuresPreference"
+                      HorizontalAlignment="Stretch" ItemsSource="{x:Bind MeasureCounts}"
+                      AutomationProperties.AutomationId="DefaultMeasuresCombo"
+                      AutomationProperties.Name="{x:Bind DefaultMeasuresName}" />
+
+            <ComboBox x:Name="PdfPageCombo" x:Uid="PdfPagePreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{x:Bind PdfPageName}">
+                <ComboBoxItem x:Uid="PdfPageA4" />
+                <ComboBoxItem x:Uid="PdfPageA3" />
+                <ComboBoxItem x:Uid="PdfPageLetter" />
             </ComboBox>
 
-            <TextBlock x:Uid="ScoreQualityHint" TextWrapping="Wrap"
-                       Style="{StaticResource CaptionTextBlockStyle}" />
+            <ComboBox x:Name="PdfQualityCombo" x:Uid="PdfQualityPreference" HorizontalAlignment="Stretch"
+                      AutomationProperties.AutomationId="PdfQualityCombo"
+                      AutomationProperties.Name="{x:Bind PdfQualityName}">
+                <ComboBoxItem x:Uid="PdfQualityStandard" />
+                <ComboBoxItem x:Uid="PdfQualityHigh" />
+                <ComboBoxItem x:Uid="PdfQualityMaximum" />
+            </ComboBox>
 
-            <TextBlock x:Uid="SheetStyleHint" TextWrapping="Wrap"
+            <TextBlock x:Uid="PdfQualityHint" TextWrapping="Wrap"
                        Style="{StaticResource CaptionTextBlockStyle}" />
             <Rectangle Height="1" Fill="{ThemeResource AppBorderBrush}" />
 

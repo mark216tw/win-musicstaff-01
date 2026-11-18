@@ -157,7 +157,8 @@ sequenceDiagram
    - `Display.BarsPerRow = 每行小節數`
    - `Display.Scale = rasterScale`
    - `Display.SpacingRatio = 音符間距比例`
-   - 依深色／淺色紙張設定音符、譜線、小節線顏色
+   - 依顯示模式的深色／淺色狀態設定音符、譜線、小節線顏色
+   - 頁首文字使用 `Microsoft JhengHei`，避免繁中文字型 fallback 超出 AlphaTab 行框
 3. 以 `Width = 1600 × rasterScale` 排版，並把 partial 的座標除以 `rasterScale` 還原成 DIP。
 4. 透過 `PartialLayoutFinished` 收集每個 partial 的位置與尺寸。
 5. 以反射讀取 AlphaTab 內部的 `Layout.Systems`，區分「頁首」與「實際系統」，並取得每個系統的第一／最後小節索引。
@@ -175,7 +176,7 @@ sequenceDiagram
 
 ### 4.4 高解析度重繪
 
-1. 基準解析度由「樂譜品質」決定（1.5×／2.0×／3.0×）。
+1. 基準解析度由「樂譜顯示品質」決定（1.5×／2.0×／3.0×）。
 2. 依目前縮放與 DPI 計算目標解析度（上限 2.5×／4.0×），以 0.5 為級距。
 3. 當目標高於基準時，建立第二個 `AlphaTabScoreSession`（`_highResSession`），以更高 rasterScale 重新排版。
 4. 可見系統先顯示基準影像，再於背景升級為高解析度版本；捲動停止後有防抖延遲，避免每一步縮放都重繪。
@@ -246,7 +247,7 @@ ScoreViewModel.ExportPdfAsync(stream)
 
 由 `UserSettingsService` 以 `System.Text.Json` 序列化，欄位包含：
 
-- 顯示與主題：`DisplayMode`、`AccentTheme`、`SheetStyle`、`PdfPageSize`
+- 顯示與主題：`DisplayMode`、`AccentTheme`、`PdfPageSize`；樂譜深淺色直接跟隨 `DisplayMode`
 - 縮放與版面：`InitialZoomMode`、`DefaultZoom`、`DefaultMeasuresPerSystem`、`NoteSpacing`
 - 品質：`ScoreQuality`、`PdfQuality`
 - 視窗：`Window`（位置、大小、最大化）

@@ -108,7 +108,7 @@
 
 - 設定採「編輯 → 套用／取消」模式，未套用不寫入。
 - 顯示模式與介面主題彼此獨立；每款主題都有淺色與深色配色。
-- 樂譜樣式可跟隨顯示模式，或固定淺色／深色紙張。
+- 樂譜顏色固定跟隨顯示模式；跟隨系統時會隨系統深淺色重新繪製。
 
 ---
 
@@ -203,7 +203,6 @@ graph TD
 | --- | --- | --- | --- |
 | `DisplayMode` | `DisplayMode` | `System` | 跟隨系統／淺色／深色 |
 | `AccentTheme` | `AccentTheme` | `ClassicBlue` | 五款介面主題 |
-| `SheetStyle` | `SheetStyle` | `FollowDisplay` | 樂譜紙張樣式 |
 | `PdfPageSize` | `PdfPageSize` | `A4` | 匯出紙張 |
 | `InitialZoomMode` | `InitialZoomMode` | `FitWidth` | 新樂譜初始縮放 |
 | `DefaultZoom` | `double` | `1.0` | 自訂初始縮放 |
@@ -223,7 +222,6 @@ graph TD
 | --- | --- |
 | `DisplayMode` | `System`、`Light`、`Dark` |
 | `AccentTheme` | `EyeCareYellow`、`ClassicBlue`、`ForestGreen`、`TwilightPurple`、`NeutralGray` |
-| `SheetStyle` | `FollowDisplay`、`Light`、`Dark` |
 | `PdfPageSize` | `A4`、`A3`、`Letter` |
 | `InitialZoomMode` | `FitWidth`、`Custom` |
 | `NoteSpacing` | `Compact`、`Normal`、`Loose` |

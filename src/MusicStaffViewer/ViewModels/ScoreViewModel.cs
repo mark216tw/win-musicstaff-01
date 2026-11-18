@@ -348,10 +348,8 @@ public sealed partial class ScoreViewModel(
         await DisposeSessionAsync(_session);
         _session = null;
 
-        bool darkPaper = _settings.SheetStyle == SheetStyle.Dark ||
-            (_settings.SheetStyle == SheetStyle.FollowDisplay &&
-            (_settings.DisplayMode == DisplayMode.Dark ||
-             (_settings.DisplayMode == DisplayMode.System && App.IsSystemDark)));
+        bool darkPaper = _settings.DisplayMode == DisplayMode.Dark ||
+            (_settings.DisplayMode == DisplayMode.System && App.IsSystemDark);
         _darkPaper = darkPaper;
         _highResUnsupported = false;
         _loadingPath = path;

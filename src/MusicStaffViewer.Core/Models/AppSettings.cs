@@ -4,7 +4,6 @@ public sealed class AppSettings
 {
     public DisplayMode DisplayMode { get; set; } = DisplayMode.System;
     public AccentTheme AccentTheme { get; set; } = AccentTheme.ClassicBlue;
-    public SheetStyle SheetStyle { get; set; } = SheetStyle.FollowDisplay;
     public PdfPageSize PdfPageSize { get; set; } = PdfPageSize.A4;
     public InitialZoomMode InitialZoomMode { get; set; } = InitialZoomMode.FitWidth;
     public double DefaultZoom { get; set; } = 1.0;
