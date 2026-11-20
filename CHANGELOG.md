@@ -1,5 +1,13 @@
 # 變更紀錄
 
+## 1.16.2 - 2026-11-20
+
+### 修正
+- 「關於」頁面的版本改讀 `AssemblyInformationalVersion`（即 `<Version>`），不再顯示落後的 `AssemblyVersion`；並去除建置附加的中繼資料。
+
+### 變更
+- 版本提升為 1.16.2；`AssemblyVersion`／`FileVersion` 不變。
+
 ## 1.16.1 - 2026-11-20
 
 ### 效能

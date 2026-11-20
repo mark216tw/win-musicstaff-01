@@ -1,15 +1,20 @@
-# MusicStaffViewer 1.16.1
+# MusicStaffViewer 1.16.2
 
 用 Windows 桌面程式閱讀 MusicXML 五線譜。可開啟或拖放 `.musicxml`、`.xml`、`.mxl` 檔，並將目前樂譜匯出為 PDF。
 
 ## 下載
 
-- `MusicStaffViewer-1.16.1-win-x64.zip`：Intel／AMD x64 電腦。
-- `MusicStaffViewer-1.16.1-win-arm64.zip`：Windows on Arm（ARM64）裝置。
+- `MusicStaffViewer-1.16.2-win-x64.zip`：Intel／AMD x64 電腦。
+- `MusicStaffViewer-1.16.2-win-arm64.zip`：Windows on Arm（ARM64）裝置。
 
 解壓縮後直接執行 `MusicStaffViewer.exe`，本版本不提供安裝程式。此為非 Self-Contained 版本，請先安裝 [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)；Windows App SDK 已包含在壓縮檔中。
 
 ## 本次更新
+
+- 修正「關於」頁面顯示的版本落後問題，現在會與實際版本號一致。
+- 繼續提供 x64 與 ARM64 兩種版本。
+
+## 1.16.1 - 2026-11-20
 
 - 最佳化應用程式冷啟動與首次開譜速度：精簡 Host 初始化、移除啟動時背景日誌目錄掃描、延遲載入偏好設定與關於頁面、使用 JSON 原始碼產生器並避免重複讀取設定檔，以及讓最近／最愛清單與設定存檔改於背景並行完成。
 - 繼續提供 x64 與 ARM64 兩種版本。

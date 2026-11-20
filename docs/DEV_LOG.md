@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-11-20 - v1.16.2
+
+### 目標
+修正「關於」頁面版本顯示為 1.16.0（落後於實際 1.16.1）的問題。
+
+### 變更
+- `AboutPage.xaml.cs`：版本改讀 `AssemblyInformationalVersionAttribute`（對應 `Directory.Build.props` 的 `<Version>`），並以 `+` 截斷建置附加的中繼資料；讀不到時退回 `AssemblyVersion`。
+- 更新 `Directory.Build.props`、`CHANGELOG.md`、`RELEASE_NOTES.md`、`docs/BUILD_AND_RELEASE.md` 至 1.16.2。
+
+### 問題與解法
+- 原本使用 `Assembly.GetName().Version`，取得的是 `AssemblyVersion`（1.16.0.0），而 `<Version>` 只寫入 AssemblyInformationalVersion，導致關於頁顯示落後 → 改讀 InformationalVersion 並去除 `+<commit>` 後綴。
+
+### 待辦／已知限制
+- `AssemblyVersion`／`FileVersion` 依規範維持 1.16.0.0，因此「檔案版本」欄位仍顯示 1.16.0.0。
+
+---
+
 ## 2026-11-20 - v1.16.1
 
 ### 目標
