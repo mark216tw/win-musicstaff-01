@@ -21,7 +21,8 @@ public sealed class UserSettingsService(string path)
             try
             {
                 await using FileStream stream = File.OpenRead(path);
-                AppSettings settings = await JsonSerializer.DeserializeAsync<AppSettings>(stream, cancellationToken: cancellationToken)
+                AppSettings settings = await JsonSerializer.DeserializeAsync(stream,
+                    AppSettingsJsonContext.Default.AppSettings, cancellationToken)
                     .ConfigureAwait(false) ?? new AppSettings();
                 settings.RecentFiles ??= [];
                 settings.RecentFiles = settings.RecentFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase)
@@ -96,7 +97,8 @@ public sealed class UserSettingsService(string path)
             string temporary = path + ".tmp";
             await using (FileStream stream = File.Create(temporary))
             {
-                await JsonSerializer.SerializeAsync(stream, settings, cancellationToken: cancellationToken)
+                await JsonSerializer.SerializeAsync(stream, settings,
+                    AppSettingsJsonContext.Default.AppSettings, cancellationToken)
                     .ConfigureAwait(false);
             }
 

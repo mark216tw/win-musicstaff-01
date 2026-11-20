@@ -1,5 +1,18 @@
 # 變更紀錄
 
+## 1.16.1 - 2026-11-20
+
+### 效能
+- 以輕量 `HostBuilder` 取代 `Host.CreateDefaultBuilder()`，移除啟動時不必要的組態檔監看與預設日誌提供者初始化。
+- 將 `FileLoggerProvider` 的目錄建立與過期日誌清理移至背景寫入工作執行，避免阻塞啟動 UI 執行緒。
+- 延遲建立 `SettingsPage` 與 `AboutPage`，改為開啟對話框時才解析 XAML 與初始化控制項。
+- 為 `AppSettings` 啟用 `System.Text.Json` 原始碼產生器，並消除啟動時重複讀取 `settings.json` 的 I/O 與反序列化。
+- 視窗啟動後即刻重疊執行設定讀取與初始樂譜初始化，樂譜排版完成後優先解除載入遮罩並顯示譜面，最近／最愛清單更新與設定寫回改於背景並行處理。
+- 共用單一 `ResourceLoader` 執行個體，並快取 `AlphaTabScoreSession` 版面解析所需的屬性資訊。
+
+### 變更
+- 版本提升為 1.16.1；`AssemblyVersion`／`FileVersion` 不變。
+
 ## 1.16.0 - 2026-11-18
 
 ### 修正

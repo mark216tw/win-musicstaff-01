@@ -22,13 +22,13 @@ namespace Com.Example.MusicStaffViewer;
 public sealed partial class MainWindow : Window
 {
     private readonly ScorePage _scorePage;
-    private readonly SettingsPage _settingsPage;
-    private readonly AboutPage _aboutPage;
+    private readonly Lazy<SettingsPage> _settingsPage;
+    private readonly Lazy<AboutPage> _aboutPage;
     private readonly ScoreViewModel _scores;
     private readonly UserSettingsService _settings;
     private readonly ILogger<MainWindow> _logger;
     private readonly ThemeService _theme;
-    private readonly ResourceLoader _strings = new();
+    private readonly ResourceLoader _strings = App.Strings;
     private readonly UISettings _systemSettings = App.SystemUISettings;
     private readonly DispatcherQueueTimer _systemThemeTimer;
     private WindowBounds _normalBounds = new(100, 100, 1200, 800);
@@ -40,7 +40,7 @@ public sealed partial class MainWindow : Window
     private WindowBounds _restoreBounds = new(100, 100, 1200, 800);
     public FrameworkElement RootElement => Root;
 
-    public MainWindow(ScorePage scorePage, SettingsPage settingsPage, AboutPage aboutPage,
+    public MainWindow(ScorePage scorePage, Lazy<SettingsPage> settingsPage, Lazy<AboutPage> aboutPage,
         ScoreViewModel scores, UserSettingsService settings, ThemeService theme, ILogger<MainWindow> logger)
     {
         _scorePage = scorePage;
@@ -297,12 +297,13 @@ public sealed partial class MainWindow : Window
         ContentDialog? dialog = null;
         try
         {
-            _settingsPage.BeginEdit();
+            SettingsPage settingsPage = _settingsPage.Value;
+            settingsPage.BeginEdit();
             dialog = new ContentDialog
             {
                 XamlRoot = Root.XamlRoot,
                 Title = _strings.GetString("PreferencesDialogTitle"),
-                Content = _settingsPage,
+                Content = settingsPage,
                 PrimaryButtonText = _strings.GetString("ApplyDialog"),
                 CloseButtonText = _strings.GetString("CancelDialog"),
                 DefaultButton = ContentDialogButton.Primary,
@@ -313,7 +314,7 @@ public sealed partial class MainWindow : Window
                 var deferral = args.GetDeferral();
                 try
                 {
-                    args.Cancel = !await _settingsPage.ApplyAsync();
+                    args.Cancel = !await settingsPage.ApplyAsync();
                 }
                 catch (Exception exception)
                 {
@@ -352,7 +353,7 @@ public sealed partial class MainWindow : Window
             dialog = new ContentDialog
             {
                 XamlRoot = Root.XamlRoot,
-                Content = _aboutPage,
+                Content = _aboutPage.Value,
                 CloseButtonText = _strings.GetString("CloseDialog"),
                 DefaultButton = ContentDialogButton.Close,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch

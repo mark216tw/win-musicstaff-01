@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-11-20 - v1.16.1
+
+### 目標
+提高應用程式啟動速度與初始樂譜顯示速度。
+
+### 變更
+- `App.xaml.cs`：改用輕量 `new HostBuilder()` 取代 `Host.CreateDefaultBuilder()`；延遲建立 `OpenFilePipeName` 並正確釋放 `Process`；共用單一 `ResourceLoader`；啟動時提前並行讀取 `settings.json` 並將已載入設定傳遞給 `ScoreViewModel`，避免重複讀檔；`MainWindow.Activate()` 後即刻啟動 `ScorePage.EnsureInitialized()` 與首幀排版重疊。
+- `FileLoggerProvider.cs`：將 `Directory.CreateDirectory` 與 `DeleteExpiredLogs()` 移至背景 `WriteLoopAsync` 執行，移除建構函式在 UI 執行緒的同步磁碟掃描。
+- `MainWindow.xaml.cs`／`Views/`：以 `Lazy<SettingsPage>`、`Lazy<AboutPage>` 延遲載入偏好設定與關於頁面的 XAML 樹；各頁面與 ViewModel 改用共用 `App.Strings`。
+- `AppSettingsJsonContext.cs`／`UserSettingsService.cs`：新增 `System.Text.Json` 原始碼產生器，降低冷啟動時 JSON 反射開銷。
+- `ScoreViewModel.cs`：`InitializeAsync` 重用已載入設定；開譜排版完成後即刻更新最愛狀態、解除載入遮罩並觸發 `ScoreLoaded`，最近／最愛清單 metadata 讀取與 `settings.json` 存檔改在背景以 `Task.WhenAll` 並行執行並加上世代檢查與清單快照。
+- `AlphaTabScoreSession.cs`：快取 `SplitPartials` 使用的 `PropertyInfo`，避免每次排版逐系統重複反射查詢。
+- 更新 `Directory.Build.props`、`CHANGELOG.md`、`RELEASE_NOTES.md`、`docs/BUILD_AND_RELEASE.md` 至 1.16.1。
+
+### 問題與解法
+- WinUI 專案建置需存取 Windows Registry 查詢 Windows SDK 路徑，在沙盒模式會出現 `MSB4184` → 測試 `Core`／`Rendering` 專案在沙盒執行，WinUI 專案建置改於沙盒外執行。
+- `RefreshRecentAsync`／`RefreshFavoritesAsync` 改為背景並行後，若背景執行期間使用者快速切換樂譜可能讀到變動中的清單 → 在進入 `Task.Run` 前於 UI 執行緒先建立路徑陣列快照，並於回寫集合前比對 `_generation`。
+
+### 待辦／已知限制
+- 若未來發佈需要進一步縮短冷啟動 JIT 時間，可於確認 x64→ARM64 交叉發佈環境後評估啟用 `PublishReadyToRun`。
+
+---
+
 ## 2026-11-18 - v1.16.0
 
 ### 目標

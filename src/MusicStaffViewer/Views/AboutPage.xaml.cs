@@ -9,7 +9,7 @@ public sealed partial class AboutPage : UserControl
     public AboutPage()
     {
         InitializeComponent();
-        var strings = new ResourceLoader();
+        ResourceLoader strings = App.Strings;
         VersionText.Text = string.Format(System.Globalization.CultureInfo.CurrentCulture,
             strings.GetString("VersionFormat"), Assembly.GetExecutingAssembly().GetName().Version?.ToString(3));
         FileVersionText.Text = string.Format(System.Globalization.CultureInfo.CurrentCulture,

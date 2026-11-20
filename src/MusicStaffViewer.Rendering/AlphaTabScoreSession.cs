@@ -24,6 +24,15 @@ public sealed class AlphaTabScoreSession(ScoreFileReader fileReader) : IAsyncDis
     public const double MinimumRasterScale = 1.0;
     public const double MaximumRasterScale = 4.0;
     private const int ScoreInfoBottomPadding = 17;
+    private const System.Reflection.BindingFlags InternalPropertyFlags =
+        System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public |
+        System.Reflection.BindingFlags.NonPublic;
+    private static readonly System.Reflection.PropertyInfo? RendererLayoutProperty =
+        typeof(ScoreRenderer).GetProperty("Layout", InternalPropertyFlags);
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, System.Reflection.PropertyInfo?>
+        SystemsPropertyCache = new();
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, SystemPropertyAccessors>
+        SystemAccessorsCache = new();
 
     public Task<ScoreLayoutResult> LoadAsync(string path, bool darkPaper, int measuresPerSystem,
         NoteSpacing noteSpacing, CancellationToken cancellationToken = default) =>
@@ -151,10 +160,15 @@ public sealed class AlphaTabScoreSession(ScoreFileReader fileReader) : IAsyncDis
     private static (List<ScorePartialLayout> Systems, ScorePartialLayout? Header) SplitPartials(
         List<ScorePartialLayout> candidates, ScoreRenderer renderer, Score score)
     {
-        const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance |
-            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
-        object? layout = typeof(ScoreRenderer).GetProperty("Layout", flags)?.GetValue(renderer);
-        object? value = layout?.GetType().GetProperty("Systems", flags)?.GetValue(layout);
+        object? layout = RendererLayoutProperty?.GetValue(renderer);
+        if (layout is null)
+        {
+            return (candidates, null);
+        }
+
+        System.Reflection.PropertyInfo? systemsProperty = SystemsPropertyCache.GetOrAdd(
+            layout.GetType(), static type => type.GetProperty("Systems", InternalPropertyFlags));
+        object? value = systemsProperty?.GetValue(layout);
         if (value is not System.Collections.IEnumerable systems)
         {
             return (candidates, null);
@@ -174,11 +188,14 @@ public sealed class AlphaTabScoreSession(ScoreFileReader fileReader) : IAsyncDis
             return (candidates, null);
         }
 
+        SystemPropertyAccessors accessors = GetSystemAccessors(systemObjects[0].GetType());
+        double firstY = ReadDouble(systemObjects[0], accessors.Y);
+        double firstHeight = ReadDouble(systemObjects[0], accessors.Height);
         int first = -1;
         for (int index = 0; index < candidates.Count; index++)
         {
-            if (Math.Abs(candidates[index].Y - ReadDouble(systemObjects[0], "Y")) <= 1.5 &&
-                Math.Abs(candidates[index].Height - ReadDouble(systemObjects[0], "Height")) <= 1.5)
+            if (Math.Abs(candidates[index].Y - firstY) <= 1.5 &&
+                Math.Abs(candidates[index].Height - firstHeight) <= 1.5)
             {
                 first = index;
                 break;
@@ -195,15 +212,26 @@ public sealed class AlphaTabScoreSession(ScoreFileReader fileReader) : IAsyncDis
         for (int index = 0; index < systemObjects.Count; index++)
         {
             object system = systemObjects[index];
+            SystemPropertyAccessors systemAccessors = system.GetType() == accessors.Type
+                ? accessors
+                : GetSystemAccessors(system.GetType());
             result.Add(candidates[first + index] with
             {
-                FirstMasterBarIndex = ReadInt(system, "FirstBarIndex"),
-                LastMasterBarIndex = ReadInt(system, "LastBarIndex")
+                FirstMasterBarIndex = ReadInt(system, systemAccessors.FirstBarIndex),
+                LastMasterBarIndex = ReadInt(system, systemAccessors.LastBarIndex)
             });
         }
 
         return (result, header);
     }
+
+    private static SystemPropertyAccessors GetSystemAccessors(Type type) =>
+        SystemAccessorsCache.GetOrAdd(type, static targetType => new SystemPropertyAccessors(
+            targetType,
+            targetType.GetProperty("Y", InternalPropertyFlags),
+            targetType.GetProperty("Height", InternalPropertyFlags),
+            targetType.GetProperty("FirstBarIndex", InternalPropertyFlags),
+            targetType.GetProperty("LastBarIndex", InternalPropertyFlags)));
 
     private static bool HasScoreInfo(Score score) =>
         !string.IsNullOrWhiteSpace(score.Title) ||
@@ -211,17 +239,18 @@ public sealed class AlphaTabScoreSession(ScoreFileReader fileReader) : IAsyncDis
         !string.IsNullOrWhiteSpace(score.Artist) ||
         !string.IsNullOrWhiteSpace(score.Copyright);
 
-    private static double ReadDouble(object target, string property) =>
-        Convert.ToDouble(target.GetType().GetProperty(property,
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public |
-            System.Reflection.BindingFlags.NonPublic)?.GetValue(target),
-            System.Globalization.CultureInfo.InvariantCulture);
+    private static double ReadDouble(object target, System.Reflection.PropertyInfo? property) =>
+        Convert.ToDouble(property?.GetValue(target), System.Globalization.CultureInfo.InvariantCulture);
 
-    private static int ReadInt(object target, string property) =>
-        Convert.ToInt32(target.GetType().GetProperty(property,
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public |
-            System.Reflection.BindingFlags.NonPublic)?.GetValue(target),
-            System.Globalization.CultureInfo.InvariantCulture);
+    private static int ReadInt(object target, System.Reflection.PropertyInfo? property) =>
+        Convert.ToInt32(property?.GetValue(target), System.Globalization.CultureInfo.InvariantCulture);
+
+    private sealed record SystemPropertyAccessors(
+        Type Type,
+        System.Reflection.PropertyInfo? Y,
+        System.Reflection.PropertyInfo? Height,
+        System.Reflection.PropertyInfo? FirstBarIndex,
+        System.Reflection.PropertyInfo? LastBarIndex);
 
     private static List<int> ResolveTrackIndices(Score score, IReadOnlyList<int>? requested)
     {

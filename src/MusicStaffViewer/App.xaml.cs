@@ -1,5 +1,6 @@
 using System.IO.Pipes;
 using System.Text;
+using Com.Example.MusicStaffViewer.Core.Models;
 using Com.Example.MusicStaffViewer.Core.MusicXml;
 using Com.Example.MusicStaffViewer.Core.Services;
 using Com.Example.MusicStaffViewer.Rendering;
@@ -11,12 +12,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace Com.Example.MusicStaffViewer;
 
 public partial class App : Application
 {
-    private static readonly string OpenFilePipeName = CreatePipeName();
+    private static readonly Lazy<string> OpenFilePipeName = new(CreatePipeName);
+    private static readonly Lazy<ResourceLoader> SharedStrings = new(() => new ResourceLoader());
     private readonly IHost _host;
     private AppInstance? _instance;
     private CancellationTokenSource? _pipeCancellation;
@@ -24,6 +27,8 @@ public partial class App : Application
     public static MainWindow? MainWindow { get; private set; }
     public static IServiceProvider Services { get; private set; } = null!;
     public static string? StartupPath { get; set; }
+    internal static AppSettings? InitialSettings { get; set; }
+    internal static ResourceLoader Strings => SharedStrings.Value;
 
     public App()
     {
@@ -43,31 +48,34 @@ public partial class App : Application
                     ReportFatal(exception);
                 }
             };
-            _host = Host.CreateDefaultBuilder()
-            .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.AddProvider(new FileLoggerProvider(Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "MusicStaffViewer", "logs")));
-            })
-            .ConfigureServices(services =>
-            {
-                services.AddSingleton<ScoreFileReader>();
-                services.AddSingleton<ScoreMetadataReader>();
-                services.AddSingleton(_ => new UserSettingsService(Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "MusicStaffViewer", "settings.json")));
-                services.AddTransient<AlphaTabScoreSession>();
-                services.AddTransient<Func<AlphaTabScoreSession>>(provider =>
-                    () => provider.GetRequiredService<AlphaTabScoreSession>());
-                services.AddSingleton<ScoreViewModel>();
-                services.AddSingleton<ScorePage>();
-                services.AddSingleton<SettingsPage>();
-                services.AddSingleton<AboutPage>();
-                services.AddSingleton<ThemeService>();
-                services.AddSingleton<MainWindow>();
-            }).Build();
+            _host = new HostBuilder()
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddProvider(new FileLoggerProvider(Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "MusicStaffViewer", "logs")));
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton<ScoreFileReader>();
+                    services.AddSingleton<ScoreMetadataReader>();
+                    services.AddSingleton(_ => new UserSettingsService(Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "MusicStaffViewer", "settings.json")));
+                    services.AddTransient<AlphaTabScoreSession>();
+                    services.AddTransient<Func<AlphaTabScoreSession>>(provider =>
+                        () => provider.GetRequiredService<AlphaTabScoreSession>());
+                    services.AddSingleton<ScoreViewModel>();
+                    services.AddSingleton<ScorePage>();
+                    services.AddSingleton<SettingsPage>();
+                    services.AddSingleton(provider =>
+                        new Lazy<SettingsPage>(() => provider.GetRequiredService<SettingsPage>()));
+                    services.AddSingleton<AboutPage>();
+                    services.AddSingleton(provider =>
+                        new Lazy<AboutPage>(() => provider.GetRequiredService<AboutPage>()));
+                    services.AddSingleton<ThemeService>();
+                    services.AddSingleton<MainWindow>();
+                }).Build();
             Services = _host.Services;
         }
         catch (Exception exception)
@@ -96,6 +104,7 @@ public partial class App : Application
             }
 
             _instance = instance;
+            Task<AppSettings> loadSettingsTask = Services.GetRequiredService<UserSettingsService>().LoadAsync();
             _pipeCancellation = new CancellationTokenSource();
             _pipeTask = Task.Run(() => RunOpenPipeAsync(_pipeCancellation.Token));
             instance.Activated += (_, _) => MainWindow?.DispatcherQueue.TryEnqueue(async () =>
@@ -119,7 +128,8 @@ public partial class App : Application
             await _host.StartAsync();
             StartupPath = GetActivationPath(AppInstance.GetCurrent().GetActivatedEventArgs()) ??
                 FindSupportedScore(Environment.GetCommandLineArgs().Skip(1));
-            var saved = await Services.GetRequiredService<UserSettingsService>().LoadAsync();
+            AppSettings saved = await loadSettingsTask;
+            InitialSettings = saved;
             MainWindow = Services.GetRequiredService<MainWindow>();
             Services.GetRequiredService<ThemeService>().Apply(saved, MainWindow.RootElement);
             MainWindow.RestoreWindow(saved.Window);
@@ -150,6 +160,7 @@ public partial class App : Application
                 }
             };
             MainWindow.Activate();
+            Services.GetRequiredService<ScorePage>().EnsureInitialized();
         }
         catch (Exception exception)
         {
@@ -164,7 +175,7 @@ public partial class App : Application
         {
             try
             {
-                await using var server = new NamedPipeServerStream(OpenFilePipeName, PipeDirection.In,
+                await using var server = new NamedPipeServerStream(OpenFilePipeName.Value, PipeDirection.In,
                     1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
                 await server.WaitForConnectionAsync(cancellationToken).ConfigureAwait(false);
                 using var reader = new StreamReader(server, Encoding.UTF8);
@@ -214,7 +225,7 @@ public partial class App : Application
     {
         try
         {
-            using var client = new NamedPipeClientStream(".", OpenFilePipeName, PipeDirection.Out,
+            using var client = new NamedPipeClientStream(".", OpenFilePipeName.Value, PipeDirection.Out,
                 PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(2));
             await client.ConnectAsync(timeout.Token).ConfigureAwait(false);
@@ -346,7 +357,7 @@ public partial class App : Application
     private static string CreatePipeName()
     {
         string user = Environment.UserName.Replace('\\', '_').Replace('/', '_');
-        int session = System.Diagnostics.Process.GetCurrentProcess().SessionId;
-        return $"MusicStaffViewer.{user}.{session}.OpenFile";
+        using var process = System.Diagnostics.Process.GetCurrentProcess();
+        return $"MusicStaffViewer.{user}.{process.SessionId}.OpenFile";
     }
 }

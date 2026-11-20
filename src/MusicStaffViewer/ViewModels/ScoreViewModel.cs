@@ -20,7 +20,7 @@ public sealed partial class ScoreViewModel(
     Func<AlphaTabScoreSession> sessionFactory,
     ILogger<ScoreViewModel> logger) : ObservableObject, IAsyncDisposable
 {
-    private readonly ResourceLoader _strings = new();
+    private readonly ResourceLoader _strings = App.Strings;
     private readonly LinkedList<ScorePartialViewModel> _cache = new();
     private readonly HashSet<string> _renderedIds = [];
     private AlphaTabScoreSession? _session;
@@ -189,11 +189,11 @@ public sealed partial class ScoreViewModel(
 
     private double MaximumRasterScale => ScoreDisplayOptions.GetMaximumRasterScale(_settings.ScoreQuality);
 
-    public async Task InitializeAsync(string? startupPath = null)
+    public async Task InitializeAsync(string? startupPath = null, AppSettings? initialSettings = null)
     {
         try
         {
-            _settings = await settingsService.LoadAsync();
+            _settings = initialSettings ?? await settingsService.LoadAsync();
             MeasuresPerSystem = _settings.DefaultMeasuresPerSystem;
             string? initial = startupPath ?? _settings.LastScorePath;
             if (initial is not null && File.Exists(initial))
@@ -202,8 +202,7 @@ public sealed partial class ScoreViewModel(
             }
             else
             {
-                await RefreshRecentAsync();
-                await RefreshFavoritesAsync();
+                await Task.WhenAll(RefreshRecentAsync(), RefreshFavoritesAsync());
             }
         }
         catch (Exception exception)
@@ -213,16 +212,22 @@ public sealed partial class ScoreViewModel(
         }
     }
 
-    private async Task RefreshRecentAsync()
+    private async Task RefreshRecentAsync(int? expectedGeneration = null)
     {
         string? current = _currentPath;
-        ScoreDocument[] recent = await Task.Run(() => _settings.RecentFiles.Where(File.Exists)
+        string[] recentPaths = [.. _settings.RecentFiles];
+        ScoreDocument[] recent = await Task.Run(() => recentPaths.Where(File.Exists)
             .Select(path =>
             {
                 ScoreDocument document = metadata.Read(path);
                 document.IsCurrent = string.Equals(path, current, StringComparison.OrdinalIgnoreCase);
                 return document;
             }).ToArray());
+        if (expectedGeneration is int expected && expected != _generation)
+        {
+            return;
+        }
+
         bool unchanged = RecentScores.Count == recent.Length;
         for (int index = 0; unchanged && index < recent.Length; index++)
         {
@@ -243,10 +248,11 @@ public sealed partial class ScoreViewModel(
         }
     }
 
-    private async Task RefreshFavoritesAsync()
+    private async Task RefreshFavoritesAsync(int? expectedGeneration = null)
     {
         string? current = _currentPath;
-        ScoreDocument[] favorites = await Task.Run(() => _settings.FavoriteFiles
+        string[] favoritePaths = [.. _settings.FavoriteFiles];
+        ScoreDocument[] favorites = await Task.Run(() => favoritePaths
             .Where(File.Exists)
             .Select(path =>
             {
@@ -257,6 +263,11 @@ public sealed partial class ScoreViewModel(
             .OrderBy(document => document.Title, StringComparer.CurrentCultureIgnoreCase)
             .ThenBy(document => document.Path, StringComparer.CurrentCultureIgnoreCase)
             .ToArray());
+        if (expectedGeneration is int expected && expected != _generation)
+        {
+            return;
+        }
+
         bool sameStructure = FavoriteScores.Count == favorites.Length;
         for (int index = 0; sameStructure && index < favorites.Length; index++)
         {
@@ -401,10 +412,11 @@ public sealed partial class ScoreViewModel(
             ApplyLayout(layout, requestedZoom, resumeSystem,
                 savedView?.OffsetWithinSystem ?? 0);
             UserSettingsService.Remember(_settings, path);
-            await RefreshRecentAsync();
-            await RefreshFavoritesAsync();
-            await settingsService.SaveAsync(_settings);
+            UpdateCurrentFavorite();
+            _loadingPath = null;
+            IsLoading = false;
             ScoreLoaded?.Invoke(fitWidth);
+            _ = UpdatePostLoadMetadataAndSaveAsync(generation);
             logger.LogInformation("Laid out {Title}: {SystemCount} systems", layout.Title, layout.Partials.Count);
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested)
@@ -425,8 +437,7 @@ public sealed partial class ScoreViewModel(
                 CurrentSystem = 0;
                 try
                 {
-                    await RefreshRecentAsync();
-                    await RefreshFavoritesAsync();
+                    await Task.WhenAll(RefreshRecentAsync(generation), RefreshFavoritesAsync(generation));
                 }
                 catch (Exception refreshException)
                 {
@@ -444,6 +455,21 @@ public sealed partial class ScoreViewModel(
                 _loadingPath = null;
                 IsLoading = false;
             }
+        }
+    }
+
+    private async Task UpdatePostLoadMetadataAndSaveAsync(int generation)
+    {
+        try
+        {
+            await Task.WhenAll(
+                RefreshRecentAsync(generation),
+                RefreshFavoritesAsync(generation),
+                settingsService.SaveAsync(_settings));
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(exception, "Could not refresh score lists or save settings after opening a score");
         }
     }
 

@@ -16,7 +16,7 @@ public sealed partial class SettingsPage : UserControl
     private readonly ThemeService _theme;
     private readonly UserSettingsService _settings;
     private readonly ILogger<SettingsPage> _logger;
-    private readonly ResourceLoader _strings = new();
+    private readonly ResourceLoader _strings = App.Strings;
     private bool _initializing;
 
     public string DisplayModeName => _strings.GetString("DisplayModeAutomationName");

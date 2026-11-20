@@ -1,19 +1,17 @@
-# MusicStaffViewer 1.16.0
+# MusicStaffViewer 1.16.1
 
 用 Windows 桌面程式閱讀 MusicXML 五線譜。可開啟或拖放 `.musicxml`、`.xml`、`.mxl` 檔，並將目前樂譜匯出為 PDF。
 
 ## 下載
 
-- `MusicStaffViewer-1.16.0-win-x64.zip`：Intel／AMD x64 電腦。
-- `MusicStaffViewer-1.16.0-win-arm64.zip`：Windows on Arm（ARM64）裝置。
+- `MusicStaffViewer-1.16.1-win-x64.zip`：Intel／AMD x64 電腦。
+- `MusicStaffViewer-1.16.1-win-arm64.zip`：Windows on Arm（ARM64）裝置。
 
 解壓縮後直接執行 `MusicStaffViewer.exe`，本版本不提供安裝程式。此為非 Self-Contained 版本，請先安裝 [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)；Windows App SDK 已包含在壓縮檔中。
 
 ## 本次更新
 
-- 修正主畫面與 PDF 的中文樂譜名稱上緣可能被截斷。
-- 偏好設定重新排序，並將名稱統一為「樂譜顯示比例」與「樂譜顯示品質」。
-- 移除獨立的樂譜樣式選項；樂譜會固定跟隨介面的顯示模式與系統深淺色變化。
+- 最佳化應用程式冷啟動與首次開譜速度：精簡 Host 初始化、移除啟動時背景日誌目錄掃描、延遲載入偏好設定與關於頁面、使用 JSON 原始碼產生器並避免重複讀取設定檔，以及讓最近／最愛清單與設定存檔改於背景並行完成。
 - 繼續提供 x64 與 ARM64 兩種版本。
 
 ## 系統需求
@@ -21,6 +19,12 @@
 - Windows 10 1809（build 17763）以上。
 - .NET 10 Desktop Runtime（x64 或 ARM64）。
 - 尚未在 Windows 10 1809 與 ARM64 實機完整驗證；開發與驗證環境為 Windows 11 x64。
+
+## 1.16.0 - 2026-11-18
+
+- 修正主畫面與 PDF 的中文樂譜名稱上緣可能被截斷。
+- 偏好設定重新排序，並將名稱統一為「樂譜顯示比例」與「樂譜顯示品質」。
+- 移除獨立的樂譜樣式選項；樂譜會固定跟隨介面的顯示模式與系統深淺色變化。
 
 ## 1.15.0 - 2026-11-18
 

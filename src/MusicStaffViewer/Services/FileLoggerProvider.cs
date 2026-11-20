@@ -18,8 +18,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
     public FileLoggerProvider(string directory)
     {
         _directory = directory;
-        Directory.CreateDirectory(directory);
-        DeleteExpiredLogs();
         _writer = Task.Run(WriteLoopAsync);
     }
 
@@ -39,6 +37,18 @@ public sealed class FileLoggerProvider : ILoggerProvider
 
     private async Task WriteLoopAsync()
     {
+        try
+        {
+            Directory.CreateDirectory(_directory);
+            DeleteExpiredLogs();
+        }
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
+
         StreamWriter? writer = null;
         string? currentDay = null;
         try

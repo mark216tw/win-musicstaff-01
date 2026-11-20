@@ -60,7 +60,7 @@ dotnet format --verify-no-changes
 版本集中於 `Directory.Build.props`：
 
 ```xml
-<Version>1.16.0</Version>
+<Version>1.16.1</Version>
 <AssemblyVersion>1.16.0.0</AssemblyVersion>
 <FileVersion>1.16.0.0</FileVersion>
 ```
@@ -165,10 +165,10 @@ Get-ChildItem artifacts/publish -Recurse -Filter *.pdb | Remove-Item -Force
 New-Item -ItemType Directory -Force artifacts/release | Out-Null
 
 Compress-Archive -Path artifacts/publish/win-x64/* `
-  -DestinationPath artifacts/release/MusicStaffViewer-1.16.0-win-x64.zip -Force
+  -DestinationPath artifacts/release/MusicStaffViewer-1.16.1-win-x64.zip -Force
 
 Compress-Archive -Path artifacts/publish/win-arm64/* `
-  -DestinationPath artifacts/release/MusicStaffViewer-1.16.0-win-arm64.zip -Force
+  -DestinationPath artifacts/release/MusicStaffViewer-1.16.1-win-arm64.zip -Force
 ```
 
 zip 解壓後應可直接看到 `MusicStaffViewer.exe`，不要多包一層資料夾。
@@ -189,18 +189,18 @@ gh repo create mark216tw/win-musicstaff-01 --public `
 
 ```powershell
 git add .
-git commit -m "Release 1.16.0"
+git commit -m "Release 1.16.1"
 git push origin master
 ```
 
 ### 7.3 建立 Release 並附加檔案
 
 ```powershell
-gh release create v1.16.0 `
-  artifacts/release/MusicStaffViewer-1.16.0-win-x64.zip `
-  artifacts/release/MusicStaffViewer-1.16.0-win-arm64.zip `
+gh release create v1.16.1 `
+  artifacts/release/MusicStaffViewer-1.16.1-win-x64.zip `
+  artifacts/release/MusicStaffViewer-1.16.1-win-arm64.zip `
   --repo mark216tw/win-musicstaff-01 `
-  --title "MusicStaffViewer 1.16.0" `
+  --title "MusicStaffViewer 1.16.1" `
   --notes-file RELEASE_NOTES.md
 ```
 

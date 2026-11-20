@@ -48,7 +48,6 @@ public sealed partial class ScorePage : UserControl
     private readonly DispatcherQueueTimer _viewStateTimer;
     private bool _updatingTracks;
     private bool _navigationDialogOpen;
-    private static readonly Microsoft.Windows.ApplicationModel.Resources.ResourceLoader SharedStrings = new();
     public ScoreViewModel ViewModel { get; }
     public IReadOnlyList<int> MeasureCounts { get; } = Enumerable.Range(
         ScoreDisplayOptions.MinimumMeasuresPerSystem,
@@ -130,9 +129,13 @@ public sealed partial class ScorePage : UserControl
         KeyboardAccelerators.Add(minus);
     }
 
-    private static string Strings(string key) => SharedStrings.GetString(key);
+    private static string Strings(string key) => App.Strings.GetString(key);
 
-    private async void OnLoaded(object sender, RoutedEventArgs e)
+    internal void EnsureInitialized() => _ = InitializeViewAsync();
+
+    private void OnLoaded(object sender, RoutedEventArgs e) => EnsureInitialized();
+
+    private async Task InitializeViewAsync()
     {
         if (_initialized)
         {
@@ -142,7 +145,9 @@ public sealed partial class ScorePage : UserControl
         _initialized = true;
         string? startupPath = App.StartupPath;
         App.StartupPath = null;
-        await ViewModel.InitializeAsync(startupPath);
+        AppSettings? initialSettings = App.InitialSettings;
+        App.InitialSettings = null;
+        await ViewModel.InitializeAsync(startupPath, initialSettings);
         SyncMeasureSelection();
         UpdateState();
     }
